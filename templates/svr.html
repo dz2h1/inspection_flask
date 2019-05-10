@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>SVR's status</title>
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <nav class="navbar navbar-expand-sm navbar-light bg-white">
+            <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+                <a class="navbar-brand">监控系统</a>
+                <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dev/">网络状态</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link text-info font-weight-bold">应用状态</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logs/">日志</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/info/">服务器状态</a>
+                    </li>
+                </ul>
+                <span class="navbar-text">版本{{ ver }}</span>
+            </div>
+        </nav>
+    </div>
+    <h3 style="text-align: center" class="text-info">应用状态</h3>
+    <br />
+    <div class="container">
+        <table class="table table-bordered table-hover table-condensed">
+            <thead>
+                <tr class="bg-info text-white">
+                    <th>应用名</th>
+                    <th>地址</th>
+                    <th>状态</th>
+                    <th>状态码</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in db_all %}
+                <tr>
+                    <td>{{ i.name }}</td>
+                    <td>{{ i.url }}</td>
+                    <td>{{ i.status|safe }}</td>
+                    <td>{{ i.code }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <br>
+        <table class="table table-bordered table-hover table-condensed">
+            <thead>
+                <tr class="bg-info text-white">
+                    <th>应用名</th>
+                    <th>地址</th>
+                    <th>标准</th>
+                    <th>实际大小</th>
+                    <th>比值%</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in db_sizeall %}
+                <tr>
+                    <td>{{ i.name }}</td>
+                    <td>{{ i.url }}</td>
+                    <td>{{ i.reference }}</td>
+                    <td>{{ i.size }}</td>
+                    <td>{{ i.deviation }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <br>
+        <div class="col-sm-3">
+            <form role="form" name='myform' action='/svr/' method='GET'>
+                修改标准值：<br />
+                <div class="input-group mb-3 input-group-sm">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">应用名</span>
+                    </div>
+                    <input id='svr_name' type='text' name='svr_name' class="form-control" placeholder="仅限字母和数字">
+                </div>
+                <div class="input-group mb-3 input-group-sm">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">新的标准值</span>
+                    </div>
+                    <input id='new_reference' type='text' name='new_reference' class="form-control" placeholder="仅限数字">
+                </div>
+                <input class="btn btn-sm" type='submit' value='确认'>
+                <input class="btn btn-sm" type='reset' value='重填'>
+            </form>
+        </div>
+    </div>
+    <br />
+    <div align="center"><button onClick="document.location.reload()">刷新</button></div>
+    <br />
+    <br />
+    <br />
+</body>
+
+</html>

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>admin's console</title>
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <nav class="navbar navbar-expand-sm navbar-light bg-white">
+            <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+                <a class="navbar-brand">监控系统</a>
+                <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dev/">网络状态</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/svr/">应用状态</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logs/">日志</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/info/">服务器状态</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/charts/">状态记录</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/crontab/">巡检触发</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/crondev/">状态记录触发</a>
+                    </li>
+                </ul>
+                <span class="navbar-text">版本{{ ver }}</span>
+            </div>
+        </nav>
+    </div>
+    <h3 style="text-align: center" class="text-info">操作台</h3>
+    <br />
+    <div class="container">
+
+        <div class="col-sm-4 offset-sm-4">
+            <form name='logs_del_form' action='/console/' method='GET'>
+                logs目前有 <font color='red'>{{ logs_num }}</font> 条记录<br />
+                <div class="input-group mb-3 input-group-sm">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">保留条数</span>
+                    </div>
+                    <input id='logs_del_keepnum' type='text' name='logs_del_keepnum' class="form-control"
+                        placeholder="仅限数字">
+                </div>
+                <input class="btn btn-sm" type='submit' value='确认'>
+            </form>
+        </div>
+
+        <br />
+
+        <div class="col-sm-4 offset-sm-4">
+            <form name='charts_del_form' action='/console/' method='GET'>
+                charts目前有 <font color='red'>{{ charts_num }}</font> 条记录<br />
+                <div class="input-group mb-3 input-group-sm">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">保留条数</span>
+                    </div>
+                    <input id='charts_del_keepnum' type='text' name='charts_del_keepnum' class="form-control"
+                        placeholder="仅限数字">
+                </div>
+                <input class="btn btn-sm" type='submit' value='确认'>
+            </form>
+        </div>
+
+        <br />
+
+        <div class="col-sm-4 offset-sm-4">
+            <form name='dev_form' action='/console/' method='GET'>
+                dev库<font color='green'>插入</font>：<br />
+                <div class="input-group mb-3 input-group-sm">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">名称</span>
+                    </div>
+                    <input id='dev_name' type='text' name='dev_name' class="form-control" placeholder="名称请勿重复">
+                </div>
+                <div class="input-group mb-3 input-group-sm">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">地址</span>
+                    </div>
+                    <input id='dev_add' type='text' name='dev_add' class="form-control" placeholder="IP地址或域名">
+                </div>
+                <input class="btn btn-sm" type='submit' value='确认'>
+            </form>
+        </div>
+
+        <br />
+
+        <div class="col-sm-4 offset-sm-4">
+            <form name='svr_form' action='/console/' method='GET'>
+                svr库<font color='green'>插入</font>：<br />
+                <div class="input-group mb-3 input-group-sm">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">名称</span>
+                    </div>
+                    <input id='svr_name' type='text' name='svr_name' class="form-control" placeholder="名称请勿重复">
+                </div>
+                <div class="input-group mb-3 input-group-sm">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">地址</span>
+                    </div>
+                    <input id='svr_add' type='text' name='svr_add' class="form-control" placeholder="加http的IP地址或域名">
+                </div>
+                <input class="btn btn-sm" type='submit' value='确认'>
+            </form>
+        </div>
+
+        <br />
+
+        <div class="col-sm-4 offset-sm-4">
+            <form name='size_form' action='/console/' method='GET'>
+                size库<font color='green'>插入</font>：<br />
+                <div class="input-group mb-3 input-group-sm">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">名称</span>
+                    </div>
+                    <input id='size_name' type='text' name='size_name' class="form-control" placeholder="名称请勿重复">
+                </div>
+                <div class="input-group mb-3 input-group-sm">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">地址</span>
+                    </div>
+                    <input id='size_add' type='text' name='size_add' class="form-control" placeholder="加http的IP地址或域名">
+                </div>
+                <input class="btn btn-sm" type='submit' value='确认'>
+            </form>
+        </div>
+
+        <br />
+
+        <div class="col-sm-4 offset-sm-4">
+            <form name='info_form' action='/console/' method='GET'>
+                info库<font color='green'>插入</font>（暂支持Linux服务器，且开通ssh访问）：<br />
+                <div class="input-group mb-3 input-group-sm">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">名称</span>
+                    </div>
+                    <input id='info_name' type='text' name='info_name' class="form-control" placeholder="名称请勿重复">
+                </div>
+                <div class="input-group mb-3 input-group-sm">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">地址</span>
+                    </div>
+                    <input id='info_add' type='text' name='info_add' class="form-control" placeholder="IP地址或域名">
+                </div>
+                <div class="input-group mb-3 input-group-sm">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">用户名</span>
+                    </div>
+                    <input id='info_usr' type='text' name='info_usr' class="form-control" placeholder="登录用户名">
+                </div>
+                <div class="input-group mb-3 input-group-sm">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">密码</span>
+                    </div>
+                    <input id='info_pw' type='text' name='info_pw' class="form-control" placeholder="登录密码">
+                </div>
+                <div class="input-group mb-3 input-group-sm">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">端口</span>
+                    </div>
+                    <input id='info_port' type='text' name='info_port' class="form-control" placeholder="ssh端口号（22）">
+                </div>
+                <input class="btn btn-sm" type='submit' value='确认'>
+            </form>
+        </div>
+
+        <br />
+
+        <div class="col-sm-4 offset-sm-4">
+            <form name='dev_del_form' action='/console/' method='GET'>
+                dev库<font color='red'>删除</font>：<br />
+                <div class="input-group mb-3 input-group-sm">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">名称</span>
+                    </div>
+                    <input id='dev_del' type='text' name='dev_del' placeholder="仅限数据库内名称">
+                </div>
+                <input class="btn btn-sm" type='submit' value='确认'>
+            </form>
+        </div>
+
+        <br />
+
+        <div class="col-sm-4 offset-sm-4">
+            <form name='svr_del_form' action='/console/' method='GET'>
+                svr库<font color='red'>删除</font>：<br />
+                <div class="input-group mb-3 input-group-sm">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">名称</span>
+                    </div>
+                    <input id='svr_del' type='text' name='svr_del' placeholder="仅限数据库内名称">
+                </div>
+                <input class="btn btn-sm" type='submit' value='确认'>
+            </form>
+        </div>
+
+        <br />
+
+        <div class="col-sm-4 offset-sm-4">
+            <form name='size_del_form' action='/console/' method='GET'>
+                size库<font color='red'>删除</font>：<br />
+                <div class="input-group mb-3 input-group-sm">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">名称</span>
+                    </div>
+                    <input id='size_del' type='text' name='size_del' placeholder="仅限数据库内名称">
+                </div>
+                <input class="btn btn-sm" type='submit' value='确认'>
+            </form>
+        </div>
+
+        <br />
+
+        <div class="col-sm-4 offset-sm-4">
+            <form name='info_del_form' action='/console/' method='GET'>
+                info库<font color='red'>删除</font>：<br />
+                <div class="input-group mb-3 input-group-sm">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">名称</span>
+                    </div>
+                    <input id='info_del' type='text' name='info_del' placeholder="仅限数据库内名称">
+                </div>
+                <input class="btn btn-sm" type='submit' value='确认'>
+            </form>
+        </div>
+
+        <br />
+
+        <div align="center"><button onClick="document.location.reload()">刷新</button></div>
+        <br />
+        <br />
+        <br />
+    </div>
+</body>
+
+</html>

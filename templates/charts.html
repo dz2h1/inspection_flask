@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>dev's charts</title>
+    <script src="/static/js/Chart.bundle.min.js"></script>
+    <meta name="viewport" content="initial-scale = 1, user-scalable = no">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <nav class="navbar navbar-expand-sm navbar-light bg-white">
+            <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+                <a class="navbar-brand">监控系统</a>
+                <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dev/">网络状态</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/svr/">应用状态</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logs/">日志</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/info/">服务器状态</a>
+                    </li>
+                </ul>
+                <span class="navbar-text">版本{{ ver }}</span>
+            </div>
+        </nav>
+    </div>
+    <h3 style="text-align: center" class="text-info">网络状态历史</h3>
+    <br />
+    <div class="container">
+        {% for i in db_all %}
+        <canvas id="{{ i.name }}" height="300" width="950"></canvas>
+        {% endfor %}
+        {% for i in db_all %}
+        <script>
+            var {{ i.name }} = {
+                labels: {{ i.time | safe }},
+                datasets: [{
+                    label: "{{ i.address }}",
+                    backgroundColor: "rgba(75,192,192,0.2)",
+                    borderColor: "rgba(75,192,192,1)",
+                    pointBackgroundColor: "rgba(75,192,192,1)",
+                    pointBorderColor: "#fff",
+                    data: {{ i.delay }}
+            }]
+        };
+            var options = {
+                title: {
+                    display: true,
+                    text: "{{ i.name }}"
+                },
+                scales: {
+                    xAxes: [{
+                        scaleLabel: {
+                            display: false,
+                            labelString: "time"
+                        }
+                    }],
+                    yAxes: [{
+                        scaleLabel: {
+                            display: true,
+                            labelString: "delay(ms)"
+                        }
+                    }]
+                }
+            };
+
+            var ctx = document.getElementById("{{ i.name }}").getContext('2d');
+            var myLineChart = new Chart(ctx, { type: 'line', data: {{ i.name }}, options: options});
+        </script>
+        {% endfor %}
+        <div align="center"><button onClick="document.location.reload()">刷新</button></div>
+        <br />
+        <br />
+        <br />
+    </div>
+</body>
+
+</html>
