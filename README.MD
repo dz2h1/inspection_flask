@@ -36,6 +36,7 @@ $ pip3 install flask pymongo requests gevent
 ```sh
 $ cp config/settings_example.py config/settings.py
 $ cp crontab_mail/mail_settings_example.py crontab_mail/mail_settings.py
+$ cp crontab_mail/wechat_settings_example.py crontab_mail/wechat_settings.py
 ```
 settings中修改实际项目服务器地址、数据库服务器地址。mail_settings中进行报警邮件相关配置。  
 ```sh
