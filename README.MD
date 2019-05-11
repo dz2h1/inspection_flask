@@ -38,10 +38,12 @@ $ cp config/settings_example.py config/settings.py
 $ cp crontab_mail/mail_settings_example.py crontab_mail/mail_settings.py
 $ cp crontab_mail/wechat_settings_example.py crontab_mail/wechat_settings.py
 ```
-settings中修改实际项目服务器地址、数据库服务器地址。mail_settings中进行报警邮件相关配置。  
+settings中修改实际项目服务器地址、数据库服务器地址。  
+mail_settings中进行报警邮件相关配置，wechat_settings.py进行企业微信推送配置（邮件、微信报警选一个）。  
 ```sh
 $ vim config/settings.py
 $ vim crontab_mail/mail_settings.py
+$ vim crontab_mail/wechat_settings.py
 ```
   
 #### 启动巡检工具
