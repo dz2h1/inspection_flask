@@ -1,6 +1,5 @@
 # Author: dz2h1
 import gevent
-from gevent import monkey; monkey.patch_all()
 
 import os
 import re

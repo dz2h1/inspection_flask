@@ -1,4 +1,5 @@
 # Author: dz2h1
+from gevent import monkey; monkey.patch_all()
 import os
 
 from flask import Flask, redirect, render_template, request, url_for
@@ -217,4 +218,7 @@ def inspection_root():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=80)
+    from gevent import pywsgi
+    server = pywsgi.WSGIServer( ('0.0.0.0', 80), app)
+    server.serve_forever()
+

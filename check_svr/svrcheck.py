@@ -1,6 +1,5 @@
 # Author: dz2h1
 import gevent
-from gevent import monkey; monkey.patch_all()
 import requests
 
 from config.settings import mongo_clinet, mongo_name, mongo_password

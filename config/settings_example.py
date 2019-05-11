@@ -1,6 +1,5 @@
 # Author: dz2h1
 # inspection's settings
-from gevent import monkey; monkey.patch_all()
 import pymongo
 
 

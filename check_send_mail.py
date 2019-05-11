@@ -1,4 +1,5 @@
 # Author: dz2h1
+from gevent import monkey; monkey.patch_all()
 import datetime
 
 from check_base import check_send
@@ -31,3 +32,4 @@ if MS_time_hm == reportSetTime:
     run_pingcheck()
     run_svrcheck()
     report_send()  # 发送报告
+
