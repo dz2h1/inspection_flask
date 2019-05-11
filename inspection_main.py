@@ -218,7 +218,7 @@ def inspection_root():
 
 
 if __name__ == '__main__':
-    from gevent import pywsgi
-    server = pywsgi.WSGIServer( ('0.0.0.0', 80), app)
+    from gevent.pywsgi import WSGIServer
+    server = WSGIServer(('0.0.0.0', 80), app)
     server.serve_forever()
 
