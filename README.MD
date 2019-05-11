@@ -105,10 +105,11 @@ $ mongo --port 27017
 ```
 
 #### 开启验证配置
-修改配置文件（yaml格式）  
+修改配置文件（注意空格）  
 ```sh
-$ vim mongod.conf 
+$ vim /etc/mongod.conf 
 ```
+添加如下配置：  
 ```
 security: 
   authorization: enabled 
