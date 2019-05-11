@@ -48,4 +48,3 @@ def run_check():
     for u, r in find_url_refer():
         temp_list.append(gevent.spawn(check_size, u, r))
     gevent.joinall(temp_list)
-

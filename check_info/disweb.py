@@ -40,4 +40,3 @@ def find_info_all():
     for i in coll.find({}):
         db_all.append(i)
     return db_all
-

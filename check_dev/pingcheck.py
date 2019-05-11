@@ -66,4 +66,3 @@ def run_check():
     for ip in find_ip():
         temp_list.append(gevent.spawn(check_ping, ip))
     gevent.joinall(temp_list)
-

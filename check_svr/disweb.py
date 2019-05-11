@@ -62,4 +62,3 @@ def insert_size(size_name, size_add):
 
 def remove_size(size_del):
     size_coll.remove({"name": size_del})
-

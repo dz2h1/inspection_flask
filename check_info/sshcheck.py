@@ -94,4 +94,3 @@ def run_infocheck():
     for password, user, port, address in find_info_ssh():
         temp_list.append(gevent.spawn(check_ssh, password, user, port, address))
     gevent.joinall(temp_list)
-

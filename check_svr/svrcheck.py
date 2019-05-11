@@ -47,4 +47,3 @@ def run_check():
     for u in find_url():
         temp_list.append(gevent.spawn(check_code, u))
     gevent.joinall(temp_list)
-

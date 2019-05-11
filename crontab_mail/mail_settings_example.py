@@ -35,4 +35,3 @@ if __name__ == '__main__':
     Subject_test = 'hello test'
     body_test = 'this is test mail from flask-mail'
     send_mail(Subject_test, body_test)
-

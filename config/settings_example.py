@@ -19,6 +19,7 @@ v0.1.2版本中支持企业微信消息报警
 在check_base中选择注释from crontab_mail.XXX_settings启用功能
 '''
 
+
 def mongo_clinet():
     return pymongo.MongoClient(host=mongodb_add,
                                port=mongodb_port,
@@ -33,4 +34,3 @@ def mongo_name():
 def mongo_password():
     ''' inspection数据库密码，可修改为从环境变量读取用户名密码'''
     return '123456'
-
