@@ -41,6 +41,7 @@
                     <th>ip地址</th>
                     <th>状态</th>
                     <th>延迟</th>
+                    <th>报警阈值</th>
                 </tr>
             </thead>
             <tbody>
@@ -49,11 +50,32 @@
                     <td>{{ i.name }}</td>
                     <td>{{ i.address }}</td>
                     <td>{{ i.status|safe }}</td>
-                    <td>{{ i.delay }}</td>
+                    <td>{{ "%s %s" | format(i.delay, "ms") | replace("timeout ms","timeout") }}</td>
+                    <td>{{ "%s %s" | format(i.setdelay, "ms") }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+        <br />
+        <div class="col-sm-3">
+            <form role="form" name='myform' action='/dev/' method='GET'>
+                修改报警阈值：<br />
+                <div class="input-group mb-3 input-group-sm">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">设备名</span>
+                    </div>
+                    <input id='dev_name' type='text' name='dev_name' class="form-control" placeholder="仅限现有名称">
+                </div>
+                <div class="input-group mb-3 input-group-sm">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">新的阈值</span>
+                    </div>
+                    <input id='new_setdelay' type='text' name='new_setdelay' class="form-control" placeholder="仅限数字">
+                </div>
+                <input class="btn btn-sm" type='submit' value='确认'>
+                <input class="btn btn-sm" type='reset' value='重填'>
+            </form>
+        </div>
         <br />
         <div align="center"><a href="/charts/" class="btn btn-secondary" role="button">设备历史记录</a>
         </div>

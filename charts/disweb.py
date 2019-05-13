@@ -22,7 +22,7 @@ def check_ping_delay(ip):
     try:
         delay = re.findall(r".*time=(.*) ms.*", cmd)[0]
     except Exception:
-        delay = -1
+        delay = -5
     return float(delay)
 
 

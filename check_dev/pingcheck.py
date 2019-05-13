@@ -39,29 +39,58 @@ def find_dev_names_ips():
     return alls
 
 
+def find_dev_ips_setDelay():
+    ips = []
+    setDelay = []
+    alls = []
+    for i in coll.find({}):
+        ips.append(i["address"])
+        setDelay.append(i["setdelay"])
+    alls = zip(ips, setDelay)
+    return alls
+
+
+def update_setdelay(devname, setdelay):
+    try:
+        nm = str(devname)
+        sd = int(setdelay)
+        coll.update_one({"name": nm}, {"$set": {"setdelay": sd}})
+    except Exception:
+        pass
+
+
 def change_status(ip, sta):
     coll.update_one({"address": ip}, {"$set": {"status": sta}})
 
 
-def change_delay(ip, time):
-    coll.update_one({"address": ip}, {"$set": {"delay": time}})
+def change_delay(ip, delay):
+    coll.update_one({"address": ip}, {"$set": {"delay": delay}})
 
 
-def check_ping(ip):
-    test = os.popen(pi + ip).read()
-    if test.count("1 received") == 1:
-        change_status(ip, "Normal")
-    else:
-        change_status(ip, "Error")
+def change_status_delay(ip, status, delay):
+    coll.update_one({"address": ip}, {"$set": {
+        "status": status,
+        "delay": delay
+        }})
+
+
+def check_ping(ip, setDelay):
+
+    stdout = os.popen(pi + ip).read()
+
     try:
-        time = re.findall(r".*time=(.*ms).*", test)[0]
+        delay = re.findall(r".*time=(.*) ms.*", stdout)[0]
+        if stdout.count("1 received") == 1 and float(delay) < float(setDelay):
+            change_status_delay(ip, "Normal", delay)
+        else:
+            change_status_delay(ip, "Error", delay)
     except Exception:
-        time = "timeout"
-    change_delay(ip, time)
+        delay = "timeout"
+        change_status_delay(ip, "Error", delay)
 
 
 def run_check():
     temp_list = []
-    for ip in find_ip():
-        temp_list.append(gevent.spawn(check_ping, ip))
+    for ip, setDelay in find_dev_ips_setDelay():
+        temp_list.append(gevent.spawn(check_ping, ip, setDelay))
     gevent.joinall(temp_list)

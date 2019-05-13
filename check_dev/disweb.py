@@ -30,7 +30,7 @@ def find_delay():
 
 
 def insert_dev(dev_name, dev_add):
-    coll.insert_one({"name": dev_name, "address": dev_add})
+    coll.insert_one({"name": dev_name, "address": dev_add, "setdelay": "100"})
 
 
 def remove_dev(dev_del):

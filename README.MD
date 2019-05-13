@@ -9,6 +9,9 @@
 5、巡检时故障的日志记录。  
 可配置定时对网络延迟、状态码和页面数据长度进行巡检，遇到网络、应用异常时可以进行邮件或企业微信报警。  
 数据长度检测主要用于页面被改动的提示。  
+  
+V0.1.4 版本更新  
+dev页面增加网络延迟报警阈值设定，默认报警阈值为100ms，可在dev页面中修改。  
 ### 部署环境  
 在CentOS6、7和Ubuntu18.04、mint19.1中运行正常，其余linux发行版未测试。由于需要使用linux命令和正则获取ping等命令返回信息，windows系统下部分功能可能异常。  
 数据库使用mongodb，版本3.6和4.0正常工作，其余版本未测试。巡检工具默认需要用户名密码访问名为inspection的数据库，请新建该数据库并设定用户名密码。  
@@ -38,7 +41,7 @@ $ cp config/settings_example.py config/settings.py
 $ cp crontab_mail/mail_settings_example.py crontab_mail/mail_settings.py
 $ cp crontab_mail/wechat_settings_example.py crontab_mail/wechat_settings.py
 ```
-settings中修改实际项目服务器地址、数据库服务器地址。  
+settings中修改数据库服务器地址、用户名、密码等信息。  
 mail_settings中进行报警邮件相关配置，wechat_settings.py进行企业微信推送配置（邮件、微信报警选一个）。  
 ```sh
 $ vim config/settings.py

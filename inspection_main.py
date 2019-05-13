@@ -9,6 +9,7 @@ from charts.disweb import (del_charts, find_chart_logs_num, make_chart_db,
 from check_dev.disweb import find_all as find_dev_all
 from check_dev.disweb import insert_dev, remove_dev
 from check_dev.pingcheck import run_check as run_pingcheck
+from check_dev.pingcheck import update_setdelay
 from check_info.disweb import find_info_all, insert_info, remove_info
 from check_info.sshcheck import run_infocheck
 from check_svr.disweb import find_all as find_svr_all
@@ -31,6 +32,16 @@ sendMail_cmd = python_path + ' ' + project_path + sendMail_fileName
 @app.route('/dev/')
 def inspection_dev():
     ''' 访问页面首先执行ping检测，数据存入数据库，之后取出数据再进行页面渲染 '''
+
+    try:
+        ''' 用于dev页面下方新报警阈值获取 '''
+        devname = request.args.get('dev_name')
+        setdelay = request.args.get('new_setdelay')
+        if devname.strip() != "" and setdelay.isdigit():
+            update_setdelay(devname.strip(), setdelay)
+            return redirect(url_for('inspection_dev'))
+    except Exception:
+        pass
 
     run_pingcheck()
     l_all = find_dev_all()
@@ -221,4 +232,3 @@ if __name__ == '__main__':
     from gevent.pywsgi import WSGIServer
     server = WSGIServer(('0.0.0.0', 80), app)
     server.serve_forever()
-
