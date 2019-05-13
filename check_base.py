@@ -22,7 +22,8 @@ MS_date = datetime.datetime.now().strftime('%Y-%m-%d')
 MS_time = datetime.datetime.now().strftime('%H:%M:%S')
 
 space_one = " "
-space_four = "    "
+space_four = "      "
+space_sep = "-" * 40 + "\n"
 
 MS_change = space_one.join([MS_date, MS_time, "status-change!!!"])
 MS_return = space_one.join([MS_date, MS_time, "status-return"])
@@ -86,33 +87,37 @@ def update_error_num():
 
 
 def build_dev():
-    MailBody = ""
+    MailBody = "dev网络检测：\n"
     temp = ""
     for i in dev_db:
-        temp = space_four.join([i["status"], i["address"], i["delay"], "\n"])
+        temp = space_four.join([i["address"], "\n", i["status"], i["delay"], "\n"])
         MailBody += temp
+    MailBody += space_sep
     return MailBody
 
 
 def build_svr():
-    MailBody = ""
+    MailBody = "svr状态码检测：\n"
     temp = ""
     for i in svr_db:
-        temp = space_four.join([i["status"], i["name"], str(i["code"]), "\n"])
+        temp = space_four.join([i["name"], "\n", i["status"], str(i["code"]), "\n"])
         MailBody += temp
+    MailBody += space_sep
     return MailBody
 
 
 def build_size():
-    MailBody = ""
+    MailBody = "页面大小检测：\n"
     temp = ""
     for i in size_db:
         temp = space_four.join([
-            str(i["deviation"]), i["name"],
+            i["name"], "\n",
+            str(i["deviation"]),
             str(i["size"]),
             str(i["reference"]), "\n"
         ])
         MailBody += temp
+    MailBody += space_sep
     return MailBody
 
 
@@ -167,5 +172,4 @@ def report_send():
 
 if __name__ == '__main__':
     check_send()
-
 
