@@ -19,15 +19,14 @@ coll = db["wechat"]
 db.authenticate(mongo_name(), mongo_password())
 
 Corpid = 'XXXX--------------'  # 企业ID
-Secret = 'XXXX--------------'  # 自建应用Secret
 Partyid = 'X'  # 部门ID
 Agentid = '100000X'  # 自建应用ID
+Secret = 'XXXX--------------'  # 自建应用Secret
 
 
 def GetTokenFromServer():
 
     Url = "https://qyapi.weixin.qq.com/cgi-bin/gettoken"
-
     Data = {"corpid": Corpid, "corpsecret": Secret}
 
     try:
@@ -51,47 +50,47 @@ def GetTokenFromDB():
     wechat_db = coll.find_one({})
 
     if wechat_db:
-
         Token_time = wechat_db['time']
         Token = wechat_db['access_token']
         Current_time = int(time.time())
-
     else:
         return False
 
-    if Current_time - Token_time > 7100:
+    if Current_time - Token_time > 7140:
         return False
-
     else:
         return Token
 
 
+def send_wechat(Subject, Content, Token):
+
+    Url = "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=%s" % Token
+    Data = {
+        # "touser": User,  # 企业号中的用户帐号
+        # "totag": Tagid,  # 企业号中的标签id，群发使用）
+        "toparty": Partyid,  # 企业号中的部门id，群发使用
+        "msgtype": "text",  # 消息类型
+        "agentid": Agentid,  # 企业号中的应用id
+        "text": {
+            "content": Subject + '\n\n' + Content
+            },
+        "safe": "0"
+        }
+    r = requests.post(url=Url, data=json.dumps(Data), verify=False)
+    return r
+
+
 def send_mail(Subject, Content):
-
+    ''' 兼容邮件报警接口 '''
     Temp_token = GetTokenFromDB()
-
     Token = Temp_token if Temp_token else GetTokenFromServer()
 
     if Token:
-
-        Url = "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=%s" % Token
-        Data = {
-            # "touser": User,  # 企业号中的用户帐号
-            # "totag": Tagid,  # 企业号中的标签id，群发使用）
-            "toparty": Partyid,  # 企业号中的部门id，群发使用
-            "msgtype": "text",  # 消息类型
-            "agentid": Agentid,  # 企业号中的应用id
-            "text": {
-                "content": Subject + '\n\n' + Content
-            },
-            "safe": "0"
-        }
-
-        r = requests.post(url=Url, data=json.dumps(Data), verify=False)
+        r = send_wechat(Subject, Content, Token)
 
         if r.json()['errcode'] != 0:
-            return False
-
+            Token = GetTokenFromServer()
+            send_wechat(Subject, Content, Token)
     else:
         return False
 

@@ -53,7 +53,7 @@ def find_dev_ips_setDelay():
 def update_setdelay(devname, setdelay):
     try:
         nm = str(devname)
-        sd = int(setdelay)
+        sd = str(setdelay)
         coll.update_one({"name": nm}, {"$set": {"setdelay": sd}})
     except Exception:
         pass
