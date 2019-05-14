@@ -6,8 +6,8 @@ from check_svr.disweb import find_all as find_svrall
 from check_svr.disweb import find_sizeall
 from config.settings import (mongo_clinet, mongo_name, mongo_password,
                              pageSizeChangelower, pageSizeChangeUpper)
-# from crontab_mail.mail_settings import send_mail
-from crontab_mail.wechat_settings import send_mail
+from crontab_mail.mail_settings import send_mail
+# from crontab_mail.wechat_settings import send_mail
 
 clinet = mongo_clinet()
 db = clinet["inspection"]
