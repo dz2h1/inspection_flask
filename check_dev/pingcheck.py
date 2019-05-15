@@ -80,7 +80,8 @@ def check_ping(ip, setDelay):
 
     try:
         delay = re.findall(r".*time=(.*) ms.*", stdout)[0]
-        if stdout.count("1 received") == 1 and float(delay) < float(setDelay):
+        if stdout.count("1 received") == 1 and (float(delay) < float(setDelay) 
+            or str(setDelay) == "0"):
             change_status_delay(ip, "Normal", delay)
         else:
             change_status_delay(ip, "Error", delay)
