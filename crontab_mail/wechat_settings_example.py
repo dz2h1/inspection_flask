@@ -64,7 +64,7 @@ def GetTokenFromDB():
 
 def send_wechat(Subject, Content, Token):
 
-    Url = "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=%s" % Token
+    Url = "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token={}".format(Token)
     Data = {
         # "touser": User,  # 企业号中的用户帐号
         # "totag": Tagid,  # 企业号中的标签id，群发使用）
