@@ -77,8 +77,16 @@ def oldnum_error_svr():
 
 NEDev = num_error_dev()
 NESvr = num_error_svr()
-ONEDev = oldnum_error_dev()
-ONESvr = oldnum_error_svr()
+
+
+try:
+    ONEDev = oldnum_error_dev()
+    ONESvr = oldnum_error_svr()
+except Exception:
+    check_coll.insert_one({"name": "dev"}, {"$set": {"ErrorNum": 0}})
+    check_coll.insert_one({"name": "svr"}, {"$set": {"ErrorNum": 0}})
+    ONEDev = 0
+    ONESvr = 0
 
 
 def update_error_num():
