@@ -3,7 +3,7 @@
 import pymongo
 
 
-ver = 'V0.1.4'  # 网页右上角的版本显示
+ver = 'V0.1.5'  # 网页右上角的版本显示
 mongodb_add = '192.168.1.1'  # mongodb数据库地址
 mongodb_port = 27017  # 数据库端口，默认27017
 logs_find_limit = 30  # log页面最大展示条目数量
