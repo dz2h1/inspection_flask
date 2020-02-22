@@ -47,7 +47,7 @@
                 <tr>
                     <td>{{ i.name }}</td>
                     <td>{{ i.url }}</td>
-                    <td>{{ i.status|safe }}</td>
+                    <td>{{ i.status | replace("Normal","<font color='green'>Normal</font>") | replace("Error","<font color='red'>Error</font>") | safe }}</td>
                     <td>{{ i.code }}</td>
                 </tr>
                 {% endfor %}

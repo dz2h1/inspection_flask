@@ -4,7 +4,7 @@ import os
 
 from flask import Flask, redirect, render_template, request, url_for
 
-from charts.disweb import (del_charts, find_chart_logs_num, make_chart_db,
+from charts.disweb import (del_charts, find_chart_logs_num, make_chart_db_aggr,
                            run_charts_check)
 from check_dev.disweb import find_all as find_dev_all
 from check_dev.disweb import insert_dev, remove_dev
@@ -46,11 +46,6 @@ def inspection_dev():
     run_pingcheck()
     l_all = find_dev_all()
 
-    for num, l in enumerate(l_all):
-        l_all[num]["status"] = "<font color='green'>Normal</font>" \
-                                        if l["status"] == "Normal" \
-                                        else "<font color='red'>Error</font>"
-
     context = {
         "db_all": l_all,
         "ver": ver,
@@ -77,11 +72,6 @@ def inspection_svr():
     l_all = find_svr_all()
     s_all = find_size_all()
 
-    for num, l in enumerate(l_all):
-        l_all[num]["status"] = "<font color='green'>Normal</font>" \
-                                        if l["status"] == "Normal" \
-                                        else "<font color='red'>Error</font>"
-
     context = {
         "db_all": l_all,
         "db_sizeall": s_all,
@@ -107,7 +97,7 @@ def inspection_logs():
 def inspection_charts():
     ''' 构建页面的chart.js图表，图表历史数量在settings文件中修改 '''
 
-    l_all = make_chart_db()
+    l_all = make_chart_db_aggr()
 
     context = {
         "db_all": l_all,

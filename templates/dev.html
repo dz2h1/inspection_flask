@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+\<!DOCTYPE html>
 <html>
 
 <head>
@@ -49,7 +49,7 @@
                 <tr>
                     <td>{{ i.name }}</td>
                     <td>{{ i.address }}</td>
-                    <td>{{ i.status|safe }}</td>
+                    <td>{{ i.status | replace("Normal","<font color='green'>Normal</font>") | replace("Error","<font color='red'>Error</font>") | safe }}</td>
                     <td>{{ "%s %s" | format(i.delay, "ms") | replace("timeout ms","timeout") }}</td>
                     <td>{{ "%s %s" | format(i.setdelay, "ms") }}</td>
                 </tr>

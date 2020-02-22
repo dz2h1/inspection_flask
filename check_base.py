@@ -24,6 +24,9 @@ MS_time = datetime.datetime.now().strftime('%H:%M:%S')
 space_one = " "
 space_four = "      "
 space_sep = "-" * 40 + "\n"
+content_length_dis = " B"
+percent_dis = "%"
+colon_dis = "："
 
 MS_change = space_one.join([MS_date, MS_time, "status-change!!!"])
 MS_return = space_one.join([MS_date, MS_time, "status-return"])
@@ -83,8 +86,7 @@ try:
     ONEDev = oldnum_error_dev()
     ONESvr = oldnum_error_svr()
 except Exception:
-    check_coll.insert_one({"name": "dev"}, {"$set": {"ErrorNum": 0}})
-    check_coll.insert_one({"name": "svr"}, {"$set": {"ErrorNum": 0}})
+    check_coll.insert_many([{"name": "dev", "ErrorNum": 0}, {"name": "svr", "ErrorNum": 0}])
     ONEDev = 0
     ONESvr = 0
 
@@ -98,7 +100,8 @@ def build_dev():
     MailBody = "dev网络检测：\n"
     temp = ""
     for i in dev_db:
-        temp = space_four.join([i["address"], "\n", i["status"], i["delay"], "\n"])
+        address_dis = i["address"] + colon_dis
+        temp = space_four.join([address_dis, "\n", i["status"], i["delay"], "\n"])
         MailBody += temp
     MailBody += space_sep
     return MailBody
@@ -108,7 +111,8 @@ def build_svr():
     MailBody = "svr状态码检测：\n"
     temp = ""
     for i in svr_db:
-        temp = space_four.join([i["name"], "\n", i["status"], str(i["code"]), "\n"])
+        name_dis = i["name"] + colon_dis
+        temp = space_four.join([name_dis, "\n", i["status"], str(i["code"]), "\n"])
         MailBody += temp
     MailBody += space_sep
     return MailBody
@@ -118,12 +122,16 @@ def build_size():
     MailBody = "页面大小检测：\n"
     temp = ""
     for i in size_db:
+        name_dis = i["name"] + colon_dis
+        deviation_dis = str(i["deviation"]) + percent_dis
+        size_dis = str(i["size"]) + content_length_dis
+        reference_dis = str(i["reference"]) + content_length_dis
         temp = space_four.join([
-            i["name"], "\n",
-            str(i["deviation"]),
-            str(i["size"]),
-            str(i["reference"]), "\n"
-        ])
+            name_dis, "\n",
+            deviation_dis,
+            size_dis,
+            reference_dis, "\n"
+            ])
         MailBody += temp
     MailBody += space_sep
     return MailBody

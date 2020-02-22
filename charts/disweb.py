@@ -75,6 +75,53 @@ def make_chart_db():
     return l_all
 
 
+def make_chart_db_aggr():
+    l_all = []
+    l_temp = coll.aggregate([
+        {
+            '$sort': {
+                '_id': -1
+            }
+        }, {
+            '$group': {
+                '_id': '$name', 
+                'time': {
+                    '$push': '$time'
+                }, 
+                'delay': {
+                    '$push': '$delay'
+                }, 
+                'address': {
+                    '$addToSet': '$address'
+                }, 
+                'name': {
+                    '$addToSet': '$name'
+                }
+            }
+        }, {
+            '$project': {
+                'address': 1, 
+                'name': 1, 
+                'time': {
+                    '$slice': [
+                        '$time', dis_num_limit
+                    ]
+                }, 
+                'delay': {
+                    '$slice': [
+                        '$delay', dis_num_limit
+                    ]
+                }
+                }
+            }
+        ])
+    for i in l_temp:
+        i["name"] = i["name"][0]
+        i["address"] = i["address"][0]
+        l_all.append(i.copy())
+    return l_all
+
+
 def find_chart_logs_num():
     return coll.find({}).count()
 

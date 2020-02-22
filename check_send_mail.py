@@ -14,7 +14,8 @@ run_svrcheck()，svr页面的状态码检测
 run_sizecheck()，size页面的大小检测
 该处默认进行size检测，可依照需求添加检测项目
 '''
-
+run_pingcheck()
+run_svrcheck()
 run_sizecheck()
 
 check_send()  # 执行检测
