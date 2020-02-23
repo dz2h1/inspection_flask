@@ -8,36 +8,18 @@ coll = db["dev"]
 db.authenticate(mongo_name(), mongo_password())
 
 
-def find_name():
-    names = []
-    for i in coll.find({}):
-        names.append(i["name"])
-    return names
-
-
-def find_status():
-    status = []
-    for i in coll.find({}):
-        status.append(i["status"])
-    return status
-
-
-def find_delay():
-    delay = []
-    for i in coll.find({}):
-        delay.append(i["delay"])
-    return delay
-
-
 def insert_dev(dev_name, dev_add):
+    '''后台/console/插入dev设备使用'''
     coll.insert_one({"name": dev_name, "address": dev_add, "setdelay": "100"})
 
 
 def remove_dev(dev_del):
+    '''后台/console/删除dev设备使用'''
     coll.remove({"name": dev_del})
 
 
 def find_all():
+    '''为inspection_main和check_base提供查找dev库所有数据使用'''
     db_all = []
     for i in coll.find({}):
         db_all.append(i)

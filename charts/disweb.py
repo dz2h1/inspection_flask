@@ -18,6 +18,7 @@ dis_num_limit = charts_dis_num_limit
 
 
 def check_ping_delay(ip):
+    '''为run_charts_check()提供delay值'''
     cmd = os.popen(pi + ip).read()
     try:
         delay = re.findall(r".*time=(.*) ms.*", cmd)[0]
@@ -27,6 +28,7 @@ def check_ping_delay(ip):
 
 
 def insert_charts_logs(logs_date, logs_time, name, address, delay):
+    '''为run_charts_check()提供插入数据库charts功能'''
     coll.insert_one({
         "date": logs_date,
         "time": logs_time,
@@ -37,6 +39,7 @@ def insert_charts_logs(logs_date, logs_time, name, address, delay):
 
 
 def run_charts_check():
+    '''为定时巡检dev设备历史使用/crondev/'''
     for name, ip in find_dev_names_ips():
         logs_date = datetime.datetime.now().strftime('%Y-%m-%d')
         logs_time = datetime.datetime.now().strftime('%H:%M:%S')
@@ -44,38 +47,8 @@ def run_charts_check():
         insert_charts_logs(logs_date, logs_time, name, ip, delay)
 
 
-def find_chart_logs_all(name, find_limit):
-    db_all = []
-    for i in coll.find({"name": name}).sort("_id", -1).limit(find_limit):
-        db_all.append(i)
-    return db_all
-
-
-def make_chart_db():
-    l_name_ip = find_dev_names_ips()
-    l_temp = []
-    d_temp = {}
-    l_all = []
-    for name, ip in l_name_ip:
-        l_temp = find_chart_logs_all(name, dis_num_limit)
-        l_temp = l_temp if len(l_temp) == dis_num_limit else [{
-            "time": '0',
-            "delay": 0
-        } for i in range(dis_num_limit)]
-        l_temp_time = []
-        l_temp_delay = []
-        d_temp['name'] = name
-        d_temp['address'] = ip
-        for i in l_temp:
-            l_temp_time.append(i["time"])
-            l_temp_delay.append(i["delay"])
-        d_temp["time"] = l_temp_time
-        d_temp["delay"] = l_temp_delay
-        l_all.append(d_temp.copy())
-    return l_all
-
-
 def make_chart_db_aggr():
+    '''为历史图表界面展示提供数据/charts/'''
     l_all = []
     l_temp = coll.aggregate([
         {
@@ -123,11 +96,12 @@ def make_chart_db_aggr():
 
 
 def find_chart_logs_num():
+    '''后台界面/console/展示charts表数据数量使用'''
     return coll.find({}).count()
 
 
 def del_charts(charts_num, charts_del_keepnum):
-
+    '''后台界面/console/删除charts表数据使用'''
     if charts_del_keepnum < 0:
         charts_del_keepnum = 0
 

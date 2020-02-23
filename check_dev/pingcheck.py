@@ -14,21 +14,8 @@ db.authenticate(mongo_name(), mongo_password())
 pi = "ping -c 1 -w 2 "
 
 
-def find_ip():
-    ips = []
-    for i in coll.find({}):
-        ips.append(i["address"])
-    return ips
-
-
-def find_dev_names():
-    names = []
-    for i in coll.find({}):
-        names.append(i["name"])
-    return names
-
-
 def find_dev_names_ips():
+    '''为charts\disweb中run_charts_check()提供dev设备的name和ip'''
     names = []
     ips = []
     alls = []
@@ -40,6 +27,7 @@ def find_dev_names_ips():
 
 
 def find_dev_ips_setDelay():
+    '''为run_check()提供dev设备的ip和延迟阈值'''
     ips = []
     setDelay = []
     alls = []
@@ -51,6 +39,7 @@ def find_dev_ips_setDelay():
 
 
 def update_setdelay(devname, setdelay):
+    '''为/dev/页面提供延迟阈值入dev库使用'''
     try:
         nm = str(devname)
         sd = str(setdelay)
@@ -59,15 +48,8 @@ def update_setdelay(devname, setdelay):
         pass
 
 
-def change_status(ip, sta):
-    coll.update_one({"address": ip}, {"$set": {"status": sta}})
-
-
-def change_delay(ip, delay):
-    coll.update_one({"address": ip}, {"$set": {"delay": delay}})
-
-
 def change_status_delay(ip, status, delay):
+    '''为check_ping()更新dev设备状态和延迟使用'''
     coll.update_one({"address": ip}, {"$set": {
         "status": status,
         "delay": delay
@@ -75,7 +57,7 @@ def change_status_delay(ip, status, delay):
 
 
 def check_ping(ip, setDelay):
-
+    '''检测dev设备状态的核心函数'''
     stdout = os.popen(pi + ip).read()
 
     try:
@@ -91,6 +73,7 @@ def check_ping(ip, setDelay):
 
 
 def run_check():
+    '''inspection_main和check_send_mail中检测dev设备状态的启动函数'''
     temp_list = []
     for ip, setDelay in find_dev_ips_setDelay():
         temp_list.append(gevent.spawn(check_ping, ip, setDelay))

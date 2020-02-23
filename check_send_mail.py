@@ -30,7 +30,5 @@ if MS_time_hm == reportSetTime:
 
     from check_base import report_send
 
-    run_pingcheck()
-    run_svrcheck()
     report_send()  # 发送报告
 

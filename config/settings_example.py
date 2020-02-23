@@ -3,7 +3,7 @@
 import pymongo
 
 
-ver = 'V0.1.6'  # 网页右上角的版本显示
+ver = 'V0.1.7'  # 网页右上角的版本显示
 mongodb_add = '192.168.1.1'  # mongodb数据库地址
 mongodb_port = 27017  # 数据库端口，默认27017
 logs_find_limit = 30  # log页面最大展示条目数量
@@ -20,6 +20,7 @@ v0.1.2版本中支持企业微信消息报警
 
 
 def mongo_clinet():
+    ''' inspection数据库接口函数'''
     return pymongo.MongoClient(host=mongodb_add,
                                port=mongodb_port,
                                connect=False)

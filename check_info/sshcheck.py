@@ -20,24 +20,12 @@ cmd05 = "'df -h /;w;free'"
 
 
 def password_decode(password):
+    '''密码解码使用'''
     return base64.b64decode(password.encode()).decode()[:-6]
 
 
-def find_info_address():
-    ips = []
-    for i in coll.find({}):
-        ips.append(i["address"])
-    return ips
-
-
-def find_info_names():
-    names = []
-    for i in coll.find({}):
-        names.append(i["name"])
-    return names
-
-
 def find_info_ssh():
+    '''为run_infocheck()提供info库设备密码、用户名、端口和地址信息'''
     pw = []
     usr = []
     po = []
@@ -53,6 +41,7 @@ def find_info_ssh():
 
 
 def change_info_status(address, cpu, mem, disk):
+    '''为check_ssh()提供数据库信息更新'''
     coll.update_one({"address": address},
                     {"$set": {
                         "cpu": cpu,
@@ -62,7 +51,7 @@ def change_info_status(address, cpu, mem, disk):
 
 
 def check_ssh(password, user, port, address):
-
+    '''info设备巡检核心函数'''
     cmd = " ".join(
         [cmd01, password, cmd02, user, cmd03, port, cmd04, address, cmd05])
     cmd_back = os.popen(cmd).read()
@@ -89,6 +78,7 @@ def check_ssh(password, user, port, address):
 
 
 def run_infocheck():
+    '''/info/页面检测巡检设备的启动函数'''
     temp_list = []
     for password, user, port, address in find_info_ssh():
         temp_list.append(gevent.spawn(check_ssh, password, user, port, address))

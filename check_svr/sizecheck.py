@@ -12,6 +12,7 @@ db.authenticate(mongo_name(), mongo_password())
 
 
 def find_url_refer():
+    '''为run_check()提供size页面地址和页面参考值使用'''
     ur = []
     for i in coll.find({}):
         ur.append([i["url"], i["reference"]])
@@ -19,10 +20,12 @@ def find_url_refer():
 
 
 def change_size_devi(url, size, devi):
+    '''为check_size()提供更新size库实际值和比值使用'''
     coll.update_one({"url": url}, {"$set": {"size": size, "deviation": devi}})
 
 
 def check_size(url, refer):
+    '''size页面巡检核心函数'''
     try:
         r = requests.get(url, timeout=3)
         size = len(r.text)
@@ -34,6 +37,7 @@ def check_size(url, refer):
 
 
 def update_refer(svrname, refer):
+    '''为/svr/页面提供设定size页面标准值使用'''
     try:
         nm = str(svrname)
         rf = int(refer)
@@ -43,6 +47,7 @@ def update_refer(svrname, refer):
 
 
 def run_check():
+    '''/svr/页面巡检size的启动函数'''
     temp_list = []
     for u, r in find_url_refer():
         temp_list.append(gevent.spawn(check_size, u, r))

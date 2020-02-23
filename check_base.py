@@ -40,6 +40,7 @@ size_db = find_sizeall()
 
 
 def num_error_dev():
+    '''获取dev库中异常设备的数量'''
     j = 0
     for i in dev_db:
         if i["status"] == "Error":
@@ -50,6 +51,7 @@ def num_error_dev():
 
 
 def num_error_svr():
+    '''获取svr库中异常设备的数量'''
     j = 0
     for i in svr_db:
         if i["status"] == "Error":
@@ -71,10 +73,12 @@ def num_error_svr():
 
 
 def oldnum_error_dev():
+    '''获取check库中上次检测的dev库异常设备数量'''
     return check_coll.find_one({"name": "dev"})["ErrorNum"]
 
 
 def oldnum_error_svr():
+    '''获取check库中上次检测的svr库异常设备数量'''
     return check_coll.find_one({"name": "svr"})["ErrorNum"]
 
 
@@ -83,6 +87,7 @@ NESvr = num_error_svr()
 
 
 try:
+    '''从check库中获取异常设备数量，如果没有则初始化check库'''
     ONEDev = oldnum_error_dev()
     ONESvr = oldnum_error_svr()
 except Exception:
@@ -92,11 +97,13 @@ except Exception:
 
 
 def update_error_num():
+    '''向check库更新dev和svr异常设备数量'''
     check_coll.update_one({"name": "dev"}, {"$set": {"ErrorNum": NEDev}})
     check_coll.update_one({"name": "svr"}, {"$set": {"ErrorNum": NESvr}})
 
 
 def build_dev():
+    '''创建邮件正文，dev设备部分'''
     MailBody = "dev网络检测：\n"
     temp = ""
     for i in dev_db:
@@ -108,6 +115,7 @@ def build_dev():
 
 
 def build_svr():
+    '''创建邮件正文，svr设备部分'''
     MailBody = "svr状态码检测：\n"
     temp = ""
     for i in svr_db:
@@ -119,6 +127,7 @@ def build_svr():
 
 
 def build_size():
+    '''创建邮件正文，size设备部分'''
     MailBody = "页面大小检测：\n"
     temp = ""
     for i in size_db:
@@ -138,11 +147,13 @@ def build_size():
 
 
 def sendmail(MS):
+    '''汇总三部分设备信息，创建邮件正文并发送邮件'''
     build_body = build_dev() + build_svr() + build_size()
     send_mail(MS, build_body)
 
 
 def insert_logs(logs_date, logs_time, logs_content):
+    '''向log库插入信息'''
     logs_coll.insert_one({
         "date": logs_date,
         "time": logs_time,
@@ -151,7 +162,7 @@ def insert_logs(logs_date, logs_time, logs_content):
 
 
 def judge():
-
+    '''巡检判断的核心函数，根据结果判断是否发送邮件'''
     RT = 0
     CH = 0
 
@@ -178,11 +189,13 @@ def judge():
 
 
 def check_send():
+    '''本脚本的接口函数。执行判断和向check库更新故障设备数量'''
     judge()
     update_error_num()
 
 
 def report_send():
+    '''定时邮件报告的函数'''
     sendmail(MS_report)
 
 

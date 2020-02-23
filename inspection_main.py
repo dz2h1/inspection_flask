@@ -29,7 +29,7 @@ project_path = os.path.dirname(os.path.realpath(__file__))
 sendMail_cmd = python_path + ' ' + project_path + sendMail_fileName
 
 
-@app.route('/dev/')
+@app.route('/dev/', methods=['GET', 'POST'])
 def inspection_dev():
     ''' 访问页面首先执行ping检测，数据存入数据库，之后取出数据再进行页面渲染 '''
 
