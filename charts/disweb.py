@@ -49,8 +49,7 @@ def run_charts_check():
 
 def make_chart_db_aggr():
     '''为历史图表界面展示提供数据/charts/'''
-    l_all = []
-    l_temp = coll.aggregate([
+    l_all = coll.aggregate([
         {
             '$sort': {
                 '_id': -1
@@ -86,18 +85,23 @@ def make_chart_db_aggr():
                     ]
                 }
                 }
+            }, {
+            '$unwind': {
+                'path': '$address'
+            }
+            }, {
+            '$unwind': {
+                'path': '$name'
+            }
             }
         ])
-    for i in l_temp:
-        i["name"] = i["name"][0]
-        i["address"] = i["address"][0]
-        l_all.append(i.copy())
+    l_all = list(l_all)
     return l_all
 
 
 def find_chart_logs_num():
     '''后台界面/console/展示charts表数据数量使用'''
-    return coll.find({}).count()
+    return coll.count_documents({})
 
 
 def del_charts(charts_num, charts_del_keepnum):

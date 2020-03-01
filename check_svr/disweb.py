@@ -11,17 +11,13 @@ db.authenticate(mongo_name(), mongo_password())
 
 def find_all():
     '''为inspection_main和check_base提供查找svr库所有数据使用'''
-    db_all = []
-    for i in coll.find({}):
-        db_all.append(i)
+    db_all = list(coll.find({}))
     return db_all
 
 
 def find_sizeall():
     '''为inspection_main和check_base提供查找size库所有数据使用'''
-    db_sizeall = []
-    for i in size_coll.find({}):
-        db_sizeall.append(i)
+    db_sizeall = list(size_coll.find({}))
     return db_sizeall
 
 

@@ -20,7 +20,5 @@ def remove_dev(dev_del):
 
 def find_all():
     '''为inspection_main和check_base提供查找dev库所有数据使用'''
-    db_all = []
-    for i in coll.find({}):
-        db_all.append(i)
+    db_all = list(coll.find({}))
     return db_all

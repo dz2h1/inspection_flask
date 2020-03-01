@@ -40,7 +40,5 @@ def remove_info(info_del):
 
 def find_info_all():
     '''为/info/页面提供info设备全部信息'''
-    db_all = []
-    for i in coll.find({}):
-        db_all.append(i)
+    db_all = list(coll.find({}))
     return db_all

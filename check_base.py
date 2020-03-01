@@ -1,5 +1,6 @@
 # Author: dz2h1
 import datetime
+from pymongo import UpdateOne
 
 from check_dev.disweb import find_all as find_devall
 from check_svr.disweb import find_all as find_svrall
@@ -98,8 +99,11 @@ except Exception:
 
 def update_error_num():
     '''向check库更新dev和svr异常设备数量'''
-    check_coll.update_one({"name": "dev"}, {"$set": {"ErrorNum": NEDev}})
-    check_coll.update_one({"name": "svr"}, {"$set": {"ErrorNum": NESvr}})
+    arr = [
+        UpdateOne({"name": "dev"}, {"$set": {"ErrorNum": NEDev}}),
+        UpdateOne({"name": "svr"}, {"$set": {"ErrorNum": NESvr}})
+    ]
+    check_coll.bulk_write(arr)
 
 
 def build_dev():
@@ -201,4 +205,3 @@ def report_send():
 
 if __name__ == '__main__':
     check_send()
-

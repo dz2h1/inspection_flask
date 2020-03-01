@@ -11,15 +11,13 @@ db.authenticate(mongo_name(), mongo_password())
 
 def find_all(find_limit=logs_find_limit):
     '''为/logs/页面提供全部log信息'''
-    db_all = []
-    for i in coll.find({}).sort("_id", -1).limit(find_limit):
-        db_all.append(i)
+    db_all = list(coll.find({}).sort("_id", -1).limit(find_limit))
     return db_all
 
 
 def find_logs_num():
     '''为/console/后台提供log数量'''
-    return coll.find({}).count()
+    return coll.count_documents({})
 
 
 def del_logs(logs_num, logs_del_keepnum):
