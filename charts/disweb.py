@@ -114,5 +114,5 @@ def del_charts(charts_num, charts_del_keepnum):
     if charts_num < 0:
         charts_num = 0
 
-    for i in range(charts_num):
+    for _ in range(charts_num):
         coll.find_one_and_delete({})

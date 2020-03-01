@@ -30,5 +30,5 @@ def del_logs(logs_num, logs_del_keepnum):
     if logs_num < 0:
         logs_num = 0
 
-    for i in range(logs_num):
+    for _ in range(logs_num):
         coll.find_one_and_delete({})
