@@ -1,8 +1,8 @@
 # Author: dz2h1
 import gevent
 import base64
-import os
 import re
+import paramiko
 
 from config.settings import mongo_clinet, mongo_name, mongo_password
 
@@ -11,12 +11,6 @@ clinet = mongo_clinet()
 db = clinet["inspection"]
 coll = db["info"]
 db.authenticate(mongo_name(), mongo_password())
-
-cmd01 = "timeout 10 sshpass -p"
-cmd02 = "ssh -l"
-cmd03 = "-p"
-cmd04 = "-o stricthostkeychecking=no"
-cmd05 = "'df -h /;w;free'"
 
 
 def password_decode(password):
@@ -52,9 +46,24 @@ def change_info_status(address, cpu, mem, disk):
 
 def check_ssh(password, user, port, address):
     '''info设备巡检核心函数'''
-    cmd = " ".join(
-        [cmd01, password, cmd02, user, cmd03, port, cmd04, address, cmd05])
-    cmd_back = os.popen(cmd).read()
+    try:
+        ssh_client = paramiko.SSHClient()
+        ssh_client.load_system_host_keys()
+        ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        ssh_client.connect(hostname=address, port=port,
+                           username=user, password=password, timeout=10)
+        std_in, std_out, std_err = ssh_client.exec_command(
+            'df -h /;w;free', timeout=5)
+        res, err = std_out.read(), std_err.read()
+        cmd_back_b = res if res else err
+        cmd_back = cmd_back_b.decode('utf-8')
+        ssh_client.close()
+    except Exception:
+        disk = "timeout"
+        cpu = "timeout"
+        mem = "timeout"
+        change_info_status(address, cpu, mem, disk)
+        return "connect_error"
 
     try:
         disk = re.findall(r"  (.*)% /.*", cmd_back)[0].split()[-1]
@@ -75,6 +84,7 @@ def check_ssh(password, user, port, address):
         mem = "timeout"
 
     change_info_status(address, cpu, mem, disk)
+    return "normal"
 
 
 def run_infocheck():

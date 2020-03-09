@@ -10,8 +10,8 @@
 可配置定时对网络延迟、状态码和页面数据长度进行巡检，遇到网络、应用异常时可以进行邮件或企业微信报警。  
 数据长度检测主要用于页面被改动的提示。  
 
-V0.2.0b 版本更新  
-增加对Win系统的支持，暂支持网络延迟、状态码和页面数据长度展示功能。启动：  
+V0.2.0b2 版本更新  
+增加对Win系统的支持，暂只支持展示和手动巡检功能。服务器巡检改为使用paramiko模块。Win系统下启动：  
 ```cmd
 > python3 inspection_main_win.py
 ```
@@ -29,27 +29,22 @@ V0.1.4 版本更新
 dev页面增加网络延迟报警阈值设定，默认报警阈值为100ms，可在dev页面中修改。  
 优化告警信息格式，内容展示更清晰。
 ### 部署环境  
-在CentOS6、7和Ubuntu18.04、mint19.1中运行正常，其余linux发行版未测试。由于需要使用linux命令和正则获取ping等命令返回信息，windows系统下部分功能可能异常。  
-数据库使用mongodb，版本3.6和4.0正常工作，其余版本未测试。巡检工具默认需要用户名密码访问名为inspection的数据库，请新建该数据库并设定用户名密码。  
-python3.6、3.7版本正常。3.4、3.5未测试。  
+在CentOS6、7和Ubuntu18.04、mint19、Raspbian中运行正常，其余linux发行版未测试。中文windows系统下展示和手动巡检部分正常。  
+数据库使用mongodb，版本3.6、4.0、4.2正常工作，其余版本未测试。巡检工具默认需要用户名密码访问名为inspection的数据库，请新建该数据库并设定用户名密码。  
+python3.6、3.7版本正常。不支持python2，其余未测试。  
   
 ### 依赖  
 #### 静态文件  
 css样式文件采用bootstrap，图表使用Chart.js，所需文件都已经放置于static文件夹中。  
   
-#### linux  
-服务器巡检功能需要使用timeout、sshpass、ssh命令，centos系统可通过yum安装：  
-```sh
-$ yum install -y sshpass openssh-clients
-```
 #### python  
-pip安装flask、pymongo、requests、gevent包，flask版本 >= 1.0.0，低版本未测试。  
+pip安装flask、pymongo、requests、gevent、paramiko包，flask版本 >= 1.0.0，低版本未测试。  
 ```sh
-$ pip3 install flask pymongo requests gevent
+$ pip3 install flask pymongo requests gevent paramiko
 ```
   
 ### 使用
-完成上述工作并部署完成工具后，需要进行如下配置：  
+完成上述工作并部署完成工具后，需要进行如下配置（linux）：  
 #### 修改配置
 部署正式配置文件。  
 ```sh
