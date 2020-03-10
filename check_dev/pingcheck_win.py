@@ -11,7 +11,7 @@ clinet = mongo_clinet()
 db = clinet["inspection"]
 coll = db["dev"]
 db.authenticate(mongo_name(), mongo_password())
-pi = "ping -n 1 -w 1000 "
+pi = "ping -4 -n 1 -w 1000 "
 
 
 def find_dev_names_ips():

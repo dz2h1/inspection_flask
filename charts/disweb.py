@@ -13,7 +13,7 @@ db = clinet["inspection"]
 coll = db["charts"]
 db.authenticate(mongo_name(), mongo_password())
 
-pi = "ping -c 1 -w 1 "
+pi = "ping -4 -c 1 -w 1 "
 dis_num_limit = charts_dis_num_limit
 
 
