@@ -51,7 +51,16 @@
                 {% endfor %}
             </tbody>
         </table>
-        <br>
+        <br />
+        <ul class="pagination">
+            {% for i in pages %}
+            {% if i == page_num %}
+            <li class="page-item active"><a class="page-link bg-info border-info" href="/logs/{{ i }}">{{ i }}</a></li>
+            {% else %}
+            <li class="page-item"><a class="page-link text-info" href="/logs/{{ i }}">{{ i }}</a></li>
+            {% endif %}
+            {% endfor %}
+        </ul>
         <div align="center"><button onClick="document.location.reload()">刷新</button></div>
         <br />
         <br />

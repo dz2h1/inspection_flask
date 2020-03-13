@@ -2,11 +2,14 @@
 from gevent import monkey; monkey.patch_all()
 import datetime
 
+from config.settings import reportSetTime, get_platform
 from check_base import check_send
-from check_dev.pingcheck import run_check as run_pingcheck
 from check_svr.sizecheck import run_check as run_sizecheck
 from check_svr.svrcheck import run_check as run_svrcheck
-from config.settings import reportSetTime
+if get_platform() == "Windows":
+    from check_dev.pingcheck_win import run_check as run_pingcheck
+else:
+    from check_dev.pingcheck import run_check as run_pingcheck
 '''
 巡检脚本，用于巡检触发时候执行哪些检测
 run_pingcheck()，dev设备的ping检测
@@ -27,8 +30,5 @@ check_send()  # 执行检测
 
 MS_time_hm = datetime.datetime.now().strftime('%H%M')
 if MS_time_hm == reportSetTime:
-
     from check_base import report_send
-
     report_send()  # 发送报告
-

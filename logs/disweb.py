@@ -9,9 +9,10 @@ coll = db["logs"]
 db.authenticate(mongo_name(), mongo_password())
 
 
-def find_all(find_limit=logs_find_limit):
+def find_all(page_num=1, find_limit=logs_find_limit):
     '''为/logs/页面提供全部log信息'''
-    db_all = list(coll.find({}).sort("_id", -1).limit(find_limit))
+    num = (page_num - 1) * logs_find_limit
+    db_all = list(coll.find({}).sort("_id", -1).skip(num).limit(find_limit))
     return db_all
 
 

@@ -4,12 +4,10 @@ import os
 
 from flask import Flask, redirect, render_template, request, url_for
 
-from charts.disweb import (del_charts, find_chart_logs_num, make_chart_db_aggr,
-                           run_charts_check)
+from config.settings import (python_path, sendMail_fileName, ver,
+                                get_platform, logs_find_limit)
 from check_dev.disweb import find_all as find_dev_all
 from check_dev.disweb import insert_dev, remove_dev
-from check_dev.pingcheck import run_check as run_pingcheck
-from check_dev.pingcheck import update_setdelay
 from check_info.disweb import find_info_all, insert_info, remove_info
 from check_info.sshcheck import run_infocheck
 from check_svr.disweb import find_all as find_svr_all
@@ -22,6 +20,16 @@ from config.settings import python_path, sendMail_fileName, ver
 from logs.disweb import del_logs
 from logs.disweb import find_all as find_logs_all
 from logs.disweb import find_logs_num
+if get_platform() == "Windows":
+    from charts.disweb_win import (del_charts, find_chart_logs_num,
+                                    make_chart_db_aggr, run_charts_check)
+    from check_dev.pingcheck_win import run_check as run_pingcheck
+    from check_dev.pingcheck_win import update_setdelay
+else:
+    from charts.disweb import (del_charts, find_chart_logs_num,
+                                    make_chart_db_aggr, run_charts_check)
+    from check_dev.pingcheck import run_check as run_pingcheck
+    from check_dev.pingcheck import update_setdelay
 
 app = Flask(__name__)
 ''' 用于构建crontab页面巡检执行命令 '''
@@ -80,16 +88,25 @@ def inspection_svr():
     return render_template('svr.html', **context)
 
 
-@app.route('/logs/')
-def inspection_logs():
-    ''' 直接取出日志数据，显示最大数量值在settings文件中修改 '''
+@app.route('/logs/<int:page_num>')
+def inspection_logs(page_num):
+    ''' 按页码取出日志数据，显示最大数量值在settings文件中修改 '''
+    logs_num = find_logs_num()
+    pages = [i for i in range(1,
+            logs_num//logs_find_limit + (2 if logs_num%logs_find_limit != 0 else 1))]
+    pages = pages if pages != [] else [1]
+    if page_num not in pages:
+        return redirect(url_for('inspection_logs', page_num=1))
 
-    l_all = find_logs_all()
+    l_all = find_logs_all(page_num)
 
     context = {
         "db_all": l_all,
         "ver": ver,
+        "pages": pages,
+        "page_num": page_num,
     }
+
     return render_template('logs.html', **context)
 
 
@@ -218,8 +235,13 @@ def inspection_root():
     return redirect(url_for('inspection_dev'))
 
 
+@app.route('/logs/')
+def inspection_logs_root():
+    ''' 访问logs地址直接跳转到logs页面 '''
+    return redirect(url_for('inspection_logs', page_num=1))
+
+
 if __name__ == '__main__':
     from gevent.pywsgi import WSGIServer
     server = WSGIServer(('0.0.0.0', 80), app)
     server.serve_forever()
-
