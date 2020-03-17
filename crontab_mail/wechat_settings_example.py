@@ -4,15 +4,12 @@
 import datetime
 import json
 import time
-
 import requests
 import urllib3
 
 from config.settings import mongo_clinet, mongo_name, mongo_password
 
-
 urllib3.disable_warnings()
-
 clinet = mongo_clinet()
 db = clinet["inspection"]
 coll = db["wechat"]
@@ -87,7 +84,6 @@ def send_mail(Subject, Content):
 
     if Token:
         r = send_wechat(Subject, Content, Token)
-
         if r.json()['errcode'] != 0:
             Token = GetTokenFromServer()
             send_wechat(Subject, Content, Token)
@@ -99,8 +95,6 @@ if __name__ == '__main__':
     '''单运行此脚本import配置文件会有路径问题，
        在from config.settings上两行
        加入import sys和sys.path.append("..")解决'''
-
     Subject = 'test'
     Content = datetime.datetime.now().strftime('%H:%M:%S')
     send_mail(Subject, Content)
-

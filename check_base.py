@@ -19,9 +19,6 @@ logs_coll = db["logs"]
 size_coll = db["size"]
 db.authenticate(mongo_name(), mongo_password())
 
-MS_date = datetime.datetime.now().strftime('%Y-%m-%d')
-MS_time = datetime.datetime.now().strftime('%H:%M:%S')
-
 space_one = " "
 space_four = "      "
 space_sep = "-" * 40 + "\n"
@@ -29,15 +26,22 @@ content_length_dis = " B"
 percent_dis = "%"
 colon_dis = "："
 
-MS_change = space_one.join([MS_date, MS_time, "status-change!!!"])
-MS_return = space_one.join([MS_date, MS_time, "status-return"])
-MS_report = space_one.join([MS_date, MS_time, "status-report"])
 
-logs_content = []
+def get_date_time():
+    global logs_content, MS_date, MS_time, MS_change, MS_return, MS_report
+    MS_date = datetime.datetime.now().strftime('%Y-%m-%d')
+    MS_time = datetime.datetime.now().strftime('%H:%M:%S')
+    MS_change = space_one.join([MS_date, MS_time, "status-change!!!"])
+    MS_return = space_one.join([MS_date, MS_time, "status-return"])
+    MS_report = space_one.join([MS_date, MS_time, "status-report"])
+    logs_content = []
 
-dev_db = find_devall()
-svr_db = find_svrall()
-size_db = find_sizeall()
+
+def get_find_dball():
+    global dev_db, svr_db, size_db
+    dev_db = find_devall()
+    svr_db = find_svrall()
+    size_db = find_sizeall()
 
 
 def num_error_dev():
@@ -83,18 +87,19 @@ def oldnum_error_svr():
     return check_coll.find_one({"name": "svr"})["ErrorNum"]
 
 
-NEDev = num_error_dev()
-NESvr = num_error_svr()
+def get_new_old_error():
+    global NEDev, NESvr, ONEDev, ONESvr
+    NEDev = num_error_dev()
+    NESvr = num_error_svr()
 
-
-try:
-    '''从check库中获取异常设备数量，如果没有则初始化check库'''
-    ONEDev = oldnum_error_dev()
-    ONESvr = oldnum_error_svr()
-except Exception:
-    check_coll.insert_many([{"name": "dev", "ErrorNum": 0}, {"name": "svr", "ErrorNum": 0}])
-    ONEDev = 0
-    ONESvr = 0
+    try:
+        '''从check库中获取异常设备数量，如果没有则初始化check库'''
+        ONEDev = oldnum_error_dev()
+        ONESvr = oldnum_error_svr()
+    except Exception:
+        check_coll.insert_many([{"name": "dev", "ErrorNum": 0}, {"name": "svr", "ErrorNum": 0}])
+        ONEDev = 0
+        ONESvr = 0
 
 
 def update_error_num():
@@ -194,12 +199,18 @@ def judge():
 
 def check_send():
     '''本脚本的接口函数。执行判断和向check库更新故障设备数量'''
+    get_date_time()
+    get_find_dball()
+    get_new_old_error()
     judge()
     update_error_num()
 
 
 def report_send():
     '''定时邮件报告的函数'''
+    get_date_time()
+    get_find_dball()
+    get_new_old_error()
     sendmail(MS_report)
 
 

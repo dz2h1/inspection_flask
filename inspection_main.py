@@ -1,11 +1,10 @@
 # Author: dz2h1
 from gevent import monkey; monkey.patch_all()
-import os
+import datetime
 
 from flask import Flask, redirect, render_template, request, url_for
 
-from config.settings import (python_path, sendMail_fileName, ver,
-                                get_platform, logs_find_limit)
+from config.settings import ver, get_platform, logs_find_limit, reportSetTime
 from check_dev.disweb import find_all as find_dev_all
 from check_dev.disweb import insert_dev, remove_dev
 from check_info.disweb import find_info_all, insert_info, remove_info
@@ -16,10 +15,10 @@ from check_svr.disweb import insert_size, insert_svr, remove_size, remove_svr
 from check_svr.sizecheck import run_check as run_sizecheck
 from check_svr.sizecheck import update_refer
 from check_svr.svrcheck import run_check as run_svrcheck
-from config.settings import python_path, sendMail_fileName, ver
 from logs.disweb import del_logs
 from logs.disweb import find_all as find_logs_all
 from logs.disweb import find_logs_num
+from check_base import check_send, report_send
 if get_platform() == "Windows":
     from charts.disweb_win import (del_charts, find_chart_logs_num,
                                     make_chart_db_aggr, run_charts_check)
@@ -33,8 +32,6 @@ else:
 
 app = Flask(__name__)
 ''' 用于构建crontab页面巡检执行命令 '''
-project_path = os.path.dirname(os.path.realpath(__file__))
-sendMail_cmd = python_path + ' ' + project_path + sendMail_fileName
 
 
 @app.route('/dev/', methods=['GET', 'POST'])
@@ -148,7 +145,13 @@ def inspection_info():
 @app.route('/crontab/')
 def inspection_crontab():
     ''' 访问页面时执行巡检脚本 '''
-    os.system(sendMail_cmd)
+    run_pingcheck()
+    run_svrcheck()
+    run_sizecheck()
+    check_send()
+    MS_time_hm = datetime.datetime.now().strftime('%H%M')
+    if MS_time_hm == reportSetTime:
+        report_send()
     return '<html>crontab</html>'
 
 
