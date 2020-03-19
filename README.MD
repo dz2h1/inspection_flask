@@ -10,6 +10,9 @@
 可配置定时对网络延迟、状态码和页面数据长度进行巡检，遇到网络、应用异常时可以进行邮件或企业微信报警。  
 数据长度检测主要用于页面被改动的提示。  
 
+V0.2.2 版本更新  
+定时巡检新增flask_apscheduler插件方式。  
+
 V0.2.1 版本更新  
 增加对Win系统的支持，服务器巡检改为使用paramiko模块，log页面添加分页。优化定时巡检功能代码。  
 
@@ -37,7 +40,7 @@ css样式文件采用bootstrap，图表使用Chart.js，所需文件都已经放
 #### python  
 pip安装flask、pymongo、requests、gevent、paramiko包，flask版本 >= 1.0.0，低版本未测试。  
 ```sh
-$ pip3 install flask pymongo requests gevent paramiko
+$ pip install flask pymongo requests gevent paramiko flask_apscheduler
 ```
   
 ### 使用
@@ -75,11 +78,11 @@ info集合中存储的服务器密码只进行了简单的加密，可在check_i
 同一集合内名称请勿重复，且不可使用汉字。如集合内条目错误可在下方输入该条目名称进行删除。  
   
 #### 巡检监控配置
-访问 /crontab/ 触发巡检，具体巡检顺序由check_send_mail.py文件控制。设置settings内reportSetTime参数可控制报告时间，如reportSetTime = “0830”为上午8:30发送巡检报告。  
-日常巡检触发频率可通过页面/crontab/被访问频率控制。  
-访问 /crondev/ 触发dev设备巡检，巡检时间间隔就是 /charts/ 中的折线图表数据采集间隔。表格数据数量由settings中charts_dis_num_limit控制，默认为12。  
-  
-巡检可以使用curl命令通过crontab定时控制自动完成。  
+访问 /crontab/ 触发巡检，具体巡检顺序由主程序中inspection_crontab控制。设置settings内reportSetTime参数可控制报告时间，如reportSetTime = '0830'为上午8:30发送巡检报告。  
+访问 /crondev/ 触发dev设备巡检。表格数据数量由settings中charts_dis_num_limit控制，默认为12。  
+以上巡检有两种方式。1、可通过settings内schedulerEnabled参数改为True启动，crontabTime和crondevTime设置巡检间隔时间。2、可以通过访问页面/crontab/和/crondev/触发巡检。  
+    
+例如通过访问页面巡检方法可通过curl命令和crontab定时控制完成：  
 ```sh
 $ crontab -e
 ```
@@ -91,9 +94,9 @@ crontab配置例子：
 #每10分钟触发dev设备巡检
 */10 * * * * /usr/bin/curl -I -s http://服务器IP/crondev/ -o /dev/null
 ```
-
+一般建议使用settings内schedulerEnabled等参数开启巡检。  
 有些服务器可能登录耗时较长，所以服务器巡检需要进入 /info/ 页面手动点击按钮完成。  
-后台管理界面也可以通过点击日志页面中的版本号进入。  
+后台管理界面也可以通过点击日志页面中的版本号进入。    
 
 ----------------------------------------------------------------------------
 ### Mongodb安装和配置

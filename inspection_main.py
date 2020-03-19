@@ -4,7 +4,8 @@ import datetime
 
 from flask import Flask, redirect, render_template, request, url_for
 
-from config.settings import ver, get_platform, logs_find_limit, reportSetTime
+from config.settings import (ver, get_platform, logs_find_limit, reportSetTime,
+                                schedulerEnabled, crontabTime, crondevTime)
 from check_dev.disweb import find_all as find_dev_all
 from check_dev.disweb import insert_dev, remove_dev
 from check_info.disweb import find_info_all, insert_info, remove_info
@@ -31,13 +32,11 @@ else:
     from check_dev.pingcheck import update_setdelay
 
 app = Flask(__name__)
-''' 用于构建crontab页面巡检执行命令 '''
 
 
 @app.route('/dev/', methods=['GET', 'POST'])
 def inspection_dev():
     ''' 访问页面首先执行ping检测，数据存入数据库，之后取出数据再进行页面渲染 '''
-
     try:
         ''' 用于dev页面下方新报警阈值获取 '''
         devname = request.args.get('dev_name')
@@ -61,7 +60,6 @@ def inspection_dev():
 @app.route('/svr/', methods=['GET', 'POST'])
 def inspection_svr():
     ''' 访问页面执行svr设备状态码检测，再执行size页面大小检测，后取出数据进行页面渲染 '''
-
     try:
         ''' 用于svr页面下方标准值获取 '''
         svrname = request.args.get('svr_name')
@@ -103,7 +101,6 @@ def inspection_logs(page_num):
         "pages": pages,
         "page_num": page_num,
     }
-
     return render_template('logs.html', **context)
 
 
@@ -123,7 +120,6 @@ def inspection_charts():
 @app.route('/info/', methods=['GET', 'POST'])
 def inspection_info():
     ''' 用于服务器巡检 '''
-
     try:
         ''' info页面下方巡检按钮 '''
         info_run = request.args.get('info_check')
@@ -165,7 +161,6 @@ def inspection_crondev():
 @app.route('/console/', methods=['GET', 'POST'])
 def inspection_console():
     ''' 后台获取各项输入数据，判断的上下位置顺序就是后台页面里的位置顺序，此处待优化 '''
-
     logs_num = find_logs_num()
     charts_num = find_chart_logs_num()
 
@@ -245,6 +240,15 @@ def inspection_logs_root():
 
 
 if __name__ == '__main__':
+    if schedulerEnabled:
+        from flask_apscheduler import APScheduler
+        scheduler = APScheduler()
+        scheduler.add_job(func=inspection_crontab, id='do_crontab',
+                                    trigger='interval', seconds=crontabTime)
+        scheduler.add_job(func=inspection_crondev, id='do_crondev',
+                                    trigger='interval', seconds=crondevTime)
+        scheduler.init_app(app)
+        scheduler.start()
     from gevent.pywsgi import WSGIServer
     server = WSGIServer(('0.0.0.0', 80), app)
     server.serve_forever()
