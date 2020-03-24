@@ -2,6 +2,7 @@
 import datetime
 import os
 import re
+from pymongo import DeleteOne
 
 from check_dev.pingcheck import find_dev_names_ips
 from config.settings import (charts_dis_num_limit, mongo_clinet, mongo_name,
@@ -106,13 +107,11 @@ def find_chart_logs_num():
 
 def del_charts(charts_num, charts_del_keepnum):
     '''后台界面/console/删除charts表数据使用'''
+    arr = []
     if charts_del_keepnum < 0:
         charts_del_keepnum = 0
-
     charts_num -= charts_del_keepnum
-
-    if charts_num < 0:
-        charts_num = 0
-
-    for _ in range(charts_num):
-        coll.find_one_and_delete({})
+    if charts_num > 0:
+        for _ in range(charts_num):
+            arr.append(DeleteOne({}))
+        coll.bulk_write(arr)

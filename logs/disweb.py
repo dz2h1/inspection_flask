@@ -1,4 +1,5 @@
 # Author: dz2h1
+from pymongo import DeleteOne
 from config.settings import (logs_find_limit, mongo_clinet, mongo_name,
                              mongo_password)
 
@@ -23,13 +24,11 @@ def find_logs_num():
 
 def del_logs(logs_num, logs_del_keepnum):
     '''为/console/后台删除log'''
+    arr = []
     if logs_del_keepnum < 0:
         logs_del_keepnum = 0
-
     logs_num -= logs_del_keepnum
-
-    if logs_num < 0:
-        logs_num = 0
-
-    for _ in range(logs_num):
-        coll.find_one_and_delete({})
+    if logs_num > 0:
+        for _ in range(logs_num):
+            arr.append(DeleteOne({}))
+        coll.bulk_write(arr)
