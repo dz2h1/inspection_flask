@@ -20,9 +20,11 @@ dis_num_limit = charts_dis_num_limit
 
 def check_ping_delay(ip):
     '''为run_charts_check()提供delay值'''
-    cmd = os.popen(pi + ip).read()
+    stdout = os.popen(pi + ip).read()
+    stdout = stdout.replace("<1ms", "=0ms")
+
     try:
-        delay = re.findall(r".*=(.*)ms TTL.*", cmd)[0]
+        delay = re.findall(r".*=(.*)ms TTL.*", stdout)[0]
     except Exception:
         delay = -5
     return float(delay)

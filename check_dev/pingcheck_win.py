@@ -59,7 +59,8 @@ def change_status_delay(ip, status, delay):
 def check_ping(ip, setDelay):
     '''检测dev设备状态的核心函数'''
     stdout = os.popen(pi + ip).read()
-    
+    stdout = stdout.replace("<1ms", "=0ms")
+
     try:
         delay = re.findall(r".*=(.*)ms TTL.*", stdout)[0]
         if stdout.count("ms") == 4 and (float(delay) < float(setDelay) 
