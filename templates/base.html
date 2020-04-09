@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>{% block title_1 %}{% endblock %}</title>
+    {% if web_name == "charts" %}
+    <script src="/static/js/Chart.bundle.min.js"></script>
+    {% endif %}
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <nav class="navbar navbar-expand-sm navbar-light bg-white">
+            <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+                <a class="navbar-brand">监控系统</a>
+                <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                    {% if web_name == "dev" %}
+                    <li class="nav-item active">
+                        <a class="nav-link text-info font-weight-bold">网络状态</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dev/">网络状态</a>
+                    </li>
+                    {% endif %}
+                    {% if web_name == "svr" %}
+                    <li class="nav-item active">
+                        <a class="nav-link text-info font-weight-bold">应用状态</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/svr/">应用状态</a>
+                    </li>
+                    {% endif %}
+                    {% if web_name == "logs" %}
+                    <li class="nav-item active">
+                        <a class="nav-link text-info font-weight-bold">日志</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logs/">日志</a>
+                    </li>
+                    {% endif %}
+                    {% if web_name == "info" %}
+                    <li class="nav-item active">
+                        <a class="nav-link text-info font-weight-bold">服务器状态</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/info/">服务器状态</a>
+                    </li>
+                    {% endif %}
+                    {% if web_name == "console" %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/charts/">状态记录</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/crontab/">巡检触发</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/crondev/">状态记录触发</a>
+                    </li>
+                    {% endif %}
+                </ul>
+                {% if web_name == "logs" %}
+                <a href="/console/"><span class="navbar-text">版本{{ ver }}</span></a>
+                {% else %}
+                <span class="navbar-text">版本{{ ver }}</span>
+                {% endif %}
+            </div>
+        </nav>
+    </div>
+    <h3 style="text-align: center" class="text-info">{% block title_2 %}{% endblock %}</h3>
+    <br />
+{% block content %}{% endblock %}
+</body>
+
+</html>

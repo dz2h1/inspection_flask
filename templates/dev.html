@@ -1,38 +1,7 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>dev's status</title>
-    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
-</head>
-
-<body>
-    <div class="container">
-        <nav class="navbar navbar-expand-sm navbar-light bg-white">
-            <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-                <a class="navbar-brand">监控系统</a>
-                <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                    <li class="nav-item active">
-                        <a class="nav-link text-info font-weight-bold">网络状态</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/svr/">应用状态</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/logs/">日志</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/info/">服务器状态</a>
-                    </li>
-                </ul>
-                <span class="navbar-text">版本{{ ver }}</span>
-            </div>
-        </nav>
-    </div>
-    <h3 style="text-align: center" class="text-info">网络状态</h3>
-    <br />
+{% extends "base.html" %}
+{% block title_1 %}dev's status{% endblock %}
+{% block title_2 %}网络状态{% endblock %}
+{% block content %}
     <div class="container">
         <table class="table table-bordered table-hover table-condensed">
             <thead>
@@ -84,6 +53,5 @@
         <br />
         <br />
         <br />
-</body>
-
-</html>
+    </div>
+{% endblock %}

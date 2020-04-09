@@ -53,6 +53,7 @@ def inspection_dev():
     context = {
         "db_all": l_all,
         "ver": ver,
+        "web_name": "dev",
     }
     return render_template('dev.html', **context)
 
@@ -79,6 +80,7 @@ def inspection_svr():
         "db_all": l_all,
         "db_sizeall": s_all,
         "ver": ver,
+        "web_name": "svr",
     }
     return render_template('svr.html', **context)
 
@@ -100,6 +102,7 @@ def inspection_logs(page_num):
         "ver": ver,
         "pages": pages,
         "page_num": page_num,
+        "web_name": "logs",
     }
     return render_template('logs.html', **context)
 
@@ -113,6 +116,7 @@ def inspection_charts():
     context = {
         "db_all": l_all,
         "ver": ver,
+        "web_name": "charts",
     }
     return render_template('charts.html', **context)
 
@@ -134,6 +138,7 @@ def inspection_info():
     context = {
         "db_all": l_all,
         "ver": ver,
+        "web_name": "info",
     }
     return render_template('info.html', **context)
 
@@ -223,6 +228,7 @@ def inspection_console():
         "logs_num": logs_num,
         "charts_num": charts_num,
         "ver": ver,
+        "web_name": "console",
     }
     return render_template('console.html', **context)
 
