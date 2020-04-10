@@ -5,8 +5,6 @@
     <div class="container">
         {% for i in db_all %}
         <canvas id="{{ i.name }}" height="300" width="950"></canvas>
-        {% endfor %}
-        {% for i in db_all %}
         <script>
             var data = {
                 labels: {{ i.time | safe }},
