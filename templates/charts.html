@@ -8,7 +8,7 @@
         {% endfor %}
         {% for i in db_all %}
         <script>
-            var {{ i.name }} = {
+            var data = {
                 labels: {{ i.time | safe }},
                 datasets: [{
                     label: "{{ i.address }}",
@@ -17,8 +17,8 @@
                     pointBackgroundColor: "rgba(75,192,192,1)",
                     pointBorderColor: "#fff",
                     data: {{ i.delay }}
-            }]
-        };
+                }]
+            };
             var options = {
                 title: {
                     display: true,
@@ -39,9 +39,8 @@
                     }]
                 }
             };
-
             var ctx = document.getElementById("{{ i.name }}").getContext('2d');
-            var myLineChart = new Chart(ctx, { type: 'line', data: {{ i.name }}, options: options});
+            var myLineChart = new Chart(ctx, {type: 'line', data: data, options: options});
         </script>
         {% endfor %}
         <div align="center"><button onClick="document.location.reload()">刷新</button></div>
