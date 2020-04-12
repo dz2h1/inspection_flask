@@ -5,10 +5,14 @@
 1、巡检端到被检测设备的网络延迟和延迟历史数据的折线图表；  
 2、页面http头部状态码；  
 3、页面的大小；  
-4、被检测服务器的CPU负载、内存使用率、根目录使用率的信息；  
-5、巡检时故障的日志记录。  
+4、设备网络端口状态；  
+5、被检测服务器的CPU负载、内存使用率、根目录使用率的信息；  
+6、巡检时故障的日志记录。  
 可配置定时对网络延迟、状态码和页面数据长度进行巡检，遇到网络、应用异常时可以进行邮件或企业微信报警。  
 数据长度检测主要用于页面被改动的提示。  
+
+V0.2.4 版本更新  
+增加端口检测功能。  
 
 V0.2.3 版本更新  
 页面渲染模板修改为继承方式。  
@@ -41,9 +45,9 @@ python3.6、3.7版本正常。不支持python2，其余未测试。
 css样式文件采用bootstrap，图表使用Chart.js，所需文件都已经放置于static文件夹中。  
   
 #### python  
-pip安装flask、pymongo、requests、gevent、paramiko包，flask版本 >= 1.0.0，低版本未测试。  
+pip安装flask、pymongo、requests、telnetlib、gevent、paramiko包，flask版本 >= 1.0.0，低版本未测试。  
 ```sh
-$ pip install flask pymongo requests gevent paramiko flask_apscheduler
+$ pip install flask pymongo requests telnetlib gevent paramiko flask_apscheduler
 ```
   
 ### 使用
@@ -74,6 +78,7 @@ $ python3 inspection_main.py
 dev集合为ping检测使用，支持ip和域名；  
 svr集合为http状态码检测使用，需要输入完整的网页访问地址；  
 size集合为网站页面数据长度检测使用，需要输入完整的网页访问地址；  
+port集合为设备端口检测是否开放使用，支持ip和域名；  
 info集合为服务器巡检使用，仅支持linux服务器。  
   
 info集合中存储的服务器密码只进行了简单的加密，可在check_info目录下的disweb和sshcheck文件中修改加密和解密函数规则。  

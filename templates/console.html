@@ -99,6 +99,33 @@
         <br />
 
         <div class="col-sm-4 offset-sm-4">
+            <form name='port_form' action='/console/' method='GET'>
+                port库<font color='green'>插入</font>：<br />
+                <div class="input-group mb-3 input-group-sm">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">名称</span>
+                    </div>
+                    <input id='dev_name_port' type='text' name='dev_name_port' class="form-control" placeholder="名称请勿重复、请勿纯数字">
+                </div>
+                <div class="input-group mb-3 input-group-sm">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">地址</span>
+                    </div>
+                    <input id='dev_add_port' type='text' name='dev_add_port' class="form-control" placeholder="IP地址或域名">
+                </div>
+                <div class="input-group mb-3 input-group-sm">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">端口</span>
+                    </div>
+                    <input id='dev_port_num' type='text' name='dev_port_num' class="form-control" placeholder="端口号1-65535">
+                </div>
+                <input class="btn btn-sm" type='submit' value='确认'>
+            </form>
+        </div>
+
+        <br />
+
+        <div class="col-sm-4 offset-sm-4">
             <form name='info_form' action='/console/' method='GET'>
                 info库<font color='green'>插入</font>（暂支持Linux服务器，且开通ssh访问）：<br />
                 <div class="input-group mb-3 input-group-sm">
@@ -175,6 +202,21 @@
                         <span class="input-group-text">名称</span>
                     </div>
                     <input id='size_del' type='text' name='size_del' placeholder="仅限数据库内名称">
+                </div>
+                <input class="btn btn-sm" type='submit' value='确认'>
+            </form>
+        </div>
+
+        <br />
+
+        <div class="col-sm-4 offset-sm-4">
+            <form name='port_del_form' action='/console/' method='GET'>
+                port库<font color='red'>删除</font>：<br />
+                <div class="input-group mb-3 input-group-sm">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">名称</span>
+                    </div>
+                    <input id='dev_del_port' type='text' name='dev_del_port' placeholder="仅限数据库内名称">
                 </div>
                 <input class="btn btn-sm" type='submit' value='确认'>
             </form>

@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title_1 %}port's status{% endblock %}
+{% block title_2 %}端口状态{% endblock %}
+{% block content %}
+    <div class="container">
+        <table class="table table-bordered table-hover table-condensed">
+            <thead>
+                <tr class="bg-info text-white">
+                    <th>设备名</th>
+                    <th>网络地址</th>
+                    <th>端口</th>
+                    <th>状态</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in db_all %}
+                <tr>
+                    <td>{{ i.name }}</td>
+                    <td>{{ i.address }}</td>
+                    <td>{{ i.port }}</td>
+                    <td>{{ i.status | replace("Open","<font color='green'>Open</font>") | replace("Closed","<font color='red'>Closed</font>") | safe }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <br />
+        <div class="col-sm-3">
+            <form role="form" name='myform' action='/port/' method='GET'>
+                增加端口：<br />
+                <div class="input-group mb-3 input-group-sm">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">设备名</span>
+                    </div>
+                    <input id='dev_name' type='text' name='dev_name' class="form-control" placeholder="仅限现有名称">
+                </div>
+                <div class="input-group mb-3 input-group-sm">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">新端口</span>
+                    </div>
+                    <input id='dev_port' type='text' name='dev_port' class="form-control" placeholder="仅限端口数字">
+                </div>
+                <input class="btn btn-sm" type='submit' value='确认'>
+                <input class="btn btn-sm" type='reset' value='重填'>
+            </form>
+        </div>
+        <br />
+        <div class="col-sm-3">
+            <form role="form" name='myform' action='/port/' method='GET'>
+                删除端口：<br />
+                <div class="input-group mb-3 input-group-sm">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">设备名</span>
+                    </div>
+                    <input id='dev_name_del' type='text' name='dev_name_del' class="form-control" placeholder="仅限现有名称">
+                </div>
+                <div class="input-group mb-3 input-group-sm">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">需删除端口</span>
+                    </div>
+                    <input id='dev_port_del' type='text' name='dev_port_del' class="form-control" placeholder="现有端口数字">
+                </div>
+                <input class="btn btn-sm" type='submit' value='确认'>
+                <input class="btn btn-sm" type='reset' value='重填'>
+            </form>
+        </div>
+        <br />
+        <div align="center"><button onClick="document.location.reload()">刷新</button></div>
+        <br />
+        <br />
+        <br />
+    </div>
+{% endblock %}

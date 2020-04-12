@@ -42,6 +42,15 @@
                         <a class="nav-link" href="/info/">服务器状态</a>
                     </li>
                     {% endif %}
+                    {% if web_name == "port" %}
+                    <li class="nav-item active">
+                        <a class="nav-link text-info font-weight-bold">端口状态</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/port/">端口状态</a>
+                    </li>
+                    {% endif %}
                     {% if web_name == "logs" %}
                     <li class="nav-item active">
                         <a class="nav-link text-info font-weight-bold">日志</a>

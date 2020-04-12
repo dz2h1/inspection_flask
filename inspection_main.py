@@ -16,6 +16,9 @@ from check_svr.disweb import insert_size, insert_svr, remove_size, remove_svr
 from check_svr.sizecheck import run_check as run_sizecheck
 from check_svr.sizecheck import update_refer
 from check_svr.svrcheck import run_check as run_svrcheck
+from check_port.disweb import (find_port_all, add_port, remove_port,
+                                insert_port_dev, remove_port_dev)
+from check_port.portcheck import run_portcheck
 from logs.disweb import del_logs
 from logs.disweb import find_all as find_logs_all
 from logs.disweb import find_logs_num
@@ -143,6 +146,42 @@ def inspection_info():
     return render_template('info.html', **context)
 
 
+@app.route('/port/', methods=['GET', 'POST'])
+def inspection_port():
+    ''' 用于端口巡检 '''
+    try:
+        ''' 用于port页面下方键入值获取 '''
+        para = request.args.to_dict()
+        for key in list(para.keys()):
+            if not para.get(key):
+                del para[key]
+                return redirect(url_for('inspection_port'))
+        if 'dev_name' in para and 'dev_port' in para:
+            dev_name = para['dev_name'].strip()
+            dev_port = para['dev_port']
+            if dev_name != "" and dev_port.isdigit():
+                add_port(dev_name, int(dev_port))
+                return redirect(url_for('inspection_port'))
+        if 'dev_name_del' in para and 'dev_port_del' in para:
+            dev_name_del = para['dev_name_del'].strip()
+            dev_port_del = para['dev_port_del']
+            if dev_name_del != "" and dev_port_del.isdigit():
+                remove_port(dev_name_del, int(dev_port_del))
+                return redirect(url_for('inspection_port'))
+    except Exception:
+        pass
+
+    run_portcheck()
+    l_all = find_port_all()
+
+    context = {
+        "db_all": l_all,
+        "ver": ver,
+        "web_name": "port",
+    }
+    return render_template('port.html', **context)
+
+
 @app.route('/crontab/')
 def inspection_crontab():
     ''' 访问页面时执行巡检脚本 '''
@@ -196,13 +235,20 @@ def inspection_console():
             insert_size(para['size_name'].strip(), para['size_add'].strip())
             return redirect(url_for('inspection_console'))
 
+        if 'dev_name_port' in para and 'dev_add_port' in para \
+                                   and 'dev_port_num' in para:
+            insert_port_dev(para['dev_name_port'].strip(),
+                            para['dev_add_port'].strip(),
+                            int(para['dev_port_num'].strip()))
+            return redirect(url_for('inspection_console'))
+
         if 'info_name' in para and 'info_add' in para \
                                and 'info_usr' in para \
                                and 'info_pw' in para \
                                and 'info_port' in para:
             insert_info(para['info_name'].strip(), para['info_add'].strip(),
                         para['info_usr'].strip(), para['info_pw'].strip(),
-                        para['info_port'].strip())
+                        int(para['info_port'].strip()))
             return redirect(url_for('inspection_console'))
 
         if 'dev_del' in para:
@@ -215,6 +261,10 @@ def inspection_console():
 
         if 'size_del' in para:
             remove_size(para['size_del'].strip())
+            return redirect(url_for('inspection_console'))
+
+        if 'dev_del_port' in para:
+            remove_port_dev(para['dev_del_port'].strip())
             return redirect(url_for('inspection_console'))
 
         if 'info_del' in para:
