@@ -26,7 +26,7 @@
         <br />
         <div class="col-sm-3">
             <form role="form" name='myform' action='/port/' method='GET'>
-                增加端口：<br />
+                <font color='green'>增加</font>端口：<br />
                 <div class="input-group mb-3 input-group-sm">
                     <div class="input-group-prepend">
                         <span class="input-group-text">设备名</span>
@@ -37,7 +37,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text">新端口</span>
                     </div>
-                    <input id='dev_port' type='text' name='dev_port' class="form-control" placeholder="仅限端口数字">
+                    <input id='dev_port' type='text' name='dev_port' class="form-control" placeholder="仅限端口号，多个用空格隔开">
                 </div>
                 <input class="btn btn-sm" type='submit' value='确认'>
                 <input class="btn btn-sm" type='reset' value='重填'>
@@ -46,7 +46,7 @@
         <br />
         <div class="col-sm-3">
             <form role="form" name='myform' action='/port/' method='GET'>
-                删除端口：<br />
+                <font color='red'>删除</font>端口：<br />
                 <div class="input-group mb-3 input-group-sm">
                     <div class="input-group-prepend">
                         <span class="input-group-text">设备名</span>
@@ -57,7 +57,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text">需删除端口</span>
                     </div>
-                    <input id='dev_port_del' type='text' name='dev_port_del' class="form-control" placeholder="现有端口数字">
+                    <input id='dev_port_del' type='text' name='dev_port_del' class="form-control" placeholder="现有端口，多个用空格隔开">
                 </div>
                 <input class="btn btn-sm" type='submit' value='确认'>
                 <input class="btn btn-sm" type='reset' value='重填'>

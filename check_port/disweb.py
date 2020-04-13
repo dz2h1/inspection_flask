@@ -10,6 +10,7 @@ db.authenticate(mongo_name(), mongo_password())
 
 def find_port_all():
     '''为inspection_main和check_base提供查找port库所有数据使用'''
+    find_port_all_del_blank()
     l_all = coll.aggregate([
         {
             '$unwind': {
@@ -29,15 +30,33 @@ def find_port_all():
     return l_all
 
 
+def find_port_all_del_blank():
+    '''在def find_port_all()函数内先检测port集合内空ports项，并删除该条数据'''
+    for i in coll.find({}):
+        if i['ports'] == []:
+            remove_port_dev(i['name'])
+
+
 def add_port(dev_name, dev_port):
-    '''/port/页面添加端口使用'''
-    coll.update_one({"name": dev_name},
-                    {"$push": {"ports": {"port": dev_port, "status": "Closed"}}})
+    '''/port/页面添加多个端口使用'''
+    for i in dev_port:
+        port = int(i)
+        try:
+            coll.update_one({"name": dev_name},
+                            {"$push": {"ports": {"port": port, "status": "Closed"}}})
+        except Exception:
+            pass
 
 
 def remove_port(dev_name, dev_port):
-    '''/port/页面删除端口使用'''
-    coll.update_one({"name": dev_name}, {"$pull": {"ports": {"port": dev_port}}})
+    '''/port/页面删除多个端口使用'''
+    for i in dev_port:
+        port = int(i)
+        try:
+            coll.update_one({"name": dev_name},
+                            {"$pull": {"ports": {"port": port}}})
+        except Exception:
+            pass
 
 
 def insert_port_dev(dev_name, dev_add, dev_port):

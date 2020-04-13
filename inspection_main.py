@@ -159,14 +159,18 @@ def inspection_port():
         if 'dev_name' in para and 'dev_port' in para:
             dev_name = para['dev_name'].strip()
             dev_port = para['dev_port']
-            if dev_name != "" and dev_port.isdigit():
-                add_port(dev_name, int(dev_port))
+            if dev_name != "" and dev_port != "":
+                dev_port_many = []
+                dev_port_many = dev_port.split()
+                add_port(dev_name, dev_port_many)
                 return redirect(url_for('inspection_port'))
         if 'dev_name_del' in para and 'dev_port_del' in para:
             dev_name_del = para['dev_name_del'].strip()
             dev_port_del = para['dev_port_del']
-            if dev_name_del != "" and dev_port_del.isdigit():
-                remove_port(dev_name_del, int(dev_port_del))
+            if dev_name_del != "" and dev_port_del != "":
+                dev_port_del_many = []
+                dev_port_del_many = dev_port_del.split()
+                remove_port(dev_name_del, dev_port_del_many)
                 return redirect(url_for('inspection_port'))
     except Exception:
         pass
