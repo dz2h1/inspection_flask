@@ -49,14 +49,14 @@ def find_add_port():
 
 
 def change_port_stat(add, port, stat):
-    '''为check_code()提供更新svr库页面代码和状态更新'''
+    '''为check_stat()提供更新port页面代码和状态更新'''
     coll.update_one({"address": add,
                      "ports": {'$elemMatch': {"port":  port}}},
                     {"$set": {"ports.$.status": stat}})
 
 
 def check_stat(add, port):
-    '''svr页面svr设备巡检核心函数'''
+    '''port页面端口巡检核心函数'''
     try:
         s = telnetlib.Telnet(host=add, port=port, timeout=1)
     except Exception:
@@ -67,7 +67,7 @@ def check_stat(add, port):
 
 
 def run_portcheck():
-    '''/port/页面巡检设备端口的启动函数'''
+    '''/port/页面巡检端口的启动函数'''
     temp_list = []
     for add, port in find_add_port():
         temp_list.append(gevent.spawn(check_stat, add, port))
