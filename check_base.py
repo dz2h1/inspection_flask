@@ -9,6 +9,7 @@ from config.settings import (mongo_clinet, mongo_name, mongo_password,
                              pageSizeChangelower, pageSizeChangeUpper)
 from crontab_mail.mail_settings import send_mail
 # from crontab_mail.wechat_settings import send_mail
+# from crontab_mail.cmd_settings import send_mail
 
 clinet = mongo_clinet()
 db = clinet["inspection"]
