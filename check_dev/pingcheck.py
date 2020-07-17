@@ -12,6 +12,7 @@ db = clinet["inspection"]
 coll = db["dev"]
 db.authenticate(mongo_name(), mongo_password())
 pi = "ping -4 -c 1 -w 2 "
+reg = re.compile(r"time=([\d\.]+)")
 
 
 def find_dev_names_ips():
@@ -59,15 +60,15 @@ def change_status_delay(ip, status, delay):
 def check_ping(ip, setDelay):
     '''检测dev设备状态的核心函数'''
     stdout = os.popen(pi + ip).read()
-
-    try:
-        delay = re.findall(r".*time=(.*) ms.*", stdout)[0]
+    delay_reg = reg.findall(stdout)
+    if delay_reg:
+        delay = delay_reg[0]
         if stdout.count("1 received") == 1 and (float(delay) < float(setDelay) 
             or str(setDelay) == "0"):
             change_status_delay(ip, "Normal", delay)
         else:
             change_status_delay(ip, "Error", delay)
-    except Exception:
+    else:
         delay = "timeout"
         change_status_delay(ip, "Error", delay)
 

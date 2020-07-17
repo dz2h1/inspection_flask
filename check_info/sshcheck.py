@@ -11,6 +11,9 @@ clinet = mongo_clinet()
 db = clinet["inspection"]
 coll = db["info"]
 db.authenticate(mongo_name(), mongo_password())
+reg_disk = re.compile(r"([\d\.]+)%")
+reg_cpu = re.compile(r"load average: ([\d\., ]+)")
+reg_mem = re.compile(r"Mem:([ \d]+)")
 
 
 def password_decode(password):
@@ -66,17 +69,17 @@ def check_ssh(password, user, port, address):
         return "connect_error"
 
     try:
-        disk = re.findall(r"  (.*)% /.*", cmd_back)[0].split()[-1]
+        disk = reg_disk.findall(cmd_back)[0].split()[-1]
     except Exception:
         disk = "timeout"
 
     try:
-        cpu = re.findall(r"load average: (.*)", cmd_back)[0].replace(",", "")
+        cpu = reg_cpu.findall(cmd_back)[0].replace(",", "")
     except Exception:
         cpu = "timeout"
 
     try:
-        mem = re.findall(r"Mem:(.*)", cmd_back)[0].split()
+        mem = reg_mem.findall(cmd_back)[0].split()
         mem_total = int(mem[0])
         mem_used = int(mem[1])
         mem = round(mem_used / mem_total * 100, 2)
